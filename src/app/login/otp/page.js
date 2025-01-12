@@ -13,7 +13,7 @@ export default function OTP() {
   const handleOTPSubmit = (e) => {
     e.preventDefault();
     if (otp === '123456') { 
-      router.push('/register'); // Redirect to the Register page
+      router.push('/login/register'); // Redirect to the Register page
     } else {
       setError('Invalid OTP');
     }

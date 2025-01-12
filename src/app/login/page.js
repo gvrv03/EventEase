@@ -13,7 +13,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Redirect to the OTP page after form submission
-    router.push('/otp');  // Navigate to OTP page
+    router.push('/login/otp');  // Navigate to OTP page
   };
 
   return (
