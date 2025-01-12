@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const HomePAge = () => {
   return (
     <>
@@ -7,6 +8,10 @@ const HomePAge = () => {
       <div>Homepage</div>
       <div>Homepage</div>
       <div>Homepage</div>
+     
+     
+
+
     </>
   );
 };
