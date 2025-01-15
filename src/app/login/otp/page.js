@@ -1,19 +1,29 @@
 'use client';
-
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function OTP() {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const router = useRouter();
   const [resendTimer, setResendTimer] = useState(30);
   const inputRefs = useRef([]);
+  const searchParams = useSearchParams();
+  const phone = searchParams.get('phone'); 
+
+  useEffect(() => {
+    if (phone) {
+      setPhoneNumber(phone);
+    } else {
+      setPhoneNumber('Not available');  
+    }
+  }, [phone]);
 
   const handleOTPSubmit = (e) => {
     e.preventDefault();
-    if (otp === '123456') { 
-      router.push('/login/register'); // Redirect to the Register page
+    if (otp === '123456') {  
+      router.push('/login/register');  
     } else {
       setError('Invalid OTP');
     }
@@ -21,28 +31,35 @@ export default function OTP() {
 
   const handleChange = (e, index) => {
     const value = e.target.value;
-    if (!isNaN(value)) {
-      setOtp((prev) => prev + value);
-
-      // Move focus to next input
+    if (!isNaN(value) && value.length === 1) {  
+      setOtp((prev) => prev + value);  
       if (index < 5) {
-        inputRefs.current[index + 1].focus();
+        inputRefs.current[index + 1].focus();  
       }
     }
   };
 
-  // Resend OTP Timer
+  
   useEffect(() => {
-    if (resendTimer > 0) {
+    if (resendTimer === 0) {
+      setTimeout(() => setResendTimer(30), 1000);  
+    } else {
       const timer = setInterval(() => setResendTimer((prev) => prev - 1), 1000);
-      return () => clearInterval(timer);
+      return () => clearInterval(timer);  
     }
   }, [resendTimer]);
+
+  
+  const handleClose = () => {
+    router.back();  
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-blue-500">
       {/* Close button */}
-      <div className="absolute top-4 right-4 text-white text-2xl cursor-pointer">&times;</div>
+      <div className="absolute top-4 right-4 text-white text-2xl cursor-pointer" onClick={handleClose}>
+        &times;
+      </div>
 
       {/* Header */}
       <h1 className="text-4xl font-bold text-white">EventEase</h1>
@@ -51,7 +68,7 @@ export default function OTP() {
       {/* OTP Form */}
       <div className="bg-white p-8 mt-8 rounded-lg shadow-lg w-[90%] sm:w-96">
         <p className="text-center text-gray-700 mb-4">
-          Enter OTP sent to <span className="font-semibold">+91 1234567890</span>
+          Enter OTP sent to <span className="font-semibold">{phoneNumber || 'Loading...'}</span>
         </p>
         <form onSubmit={handleOTPSubmit} className="space-y-4">
           {/* OTP Input */}
@@ -77,7 +94,6 @@ export default function OTP() {
               .padStart(2, '0')}`}</span>
           </p>
 
-         
           <button
             type="submit"
             className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"

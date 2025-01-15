@@ -12,9 +12,9 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Redirect to the OTP page after form submission
-    router.push('/login/otp');  // Navigate to OTP page
+    router.push(`/login/otp?phone=${encodeURIComponent(phone)}`);  
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-500 to-blue-300">
