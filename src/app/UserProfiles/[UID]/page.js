@@ -6,11 +6,13 @@ import React from "react";
 
 const MangersVendorsProfiles = () => {
   return (
-    <div className="flex-col flex gap-2 md:gap-5" >
-      <MainDetails />
-      <MVAboutUs/>
-      <MVServices/>
-      <MVPastEvents/>
+    <div className="flex-col flex gap-2 md:gap-5">
+      <div className="flex  md:flex-row flex-col gap-2 md:gap-5">
+        <MainDetails />
+        <MVAboutUs />
+      </div>
+      <MVPastEvents />
+      <MVServices />
     </div>
   );
 };
