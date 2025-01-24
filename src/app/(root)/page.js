@@ -1,14 +1,16 @@
 import React from "react";
+import Navbar from "../../Components/Utility/Navbar";
+import Banner from "../../Components/Home/Banner";
+import Landing from "../../Components/Home/Landing";
 
-const HomePAge = () => {
+const HomePage = () => {
   return (
     <>
-      <div>Homepage</div>
-      <div>Homepage</div>
-      <div>Homepage</div>
-      <div>Homepage</div>
+      <Navbar />
+      <Banner />
+      <Landing />
     </>
   );
 };
 
-export default HomePAge;
+export default HomePage;
