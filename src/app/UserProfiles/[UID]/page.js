@@ -2,6 +2,7 @@ import MainDetails from "@/Components/UserProfile/MVUsersProfile/MainDetails";
 import MVAboutUs from "@/Components/UserProfile/MVUsersProfile/MVAboutUs";
 import MVPastEvents from "@/Components/UserProfile/MVUsersProfile/MVPastEvents";
 import MVServices from "@/Components/UserProfile/MVUsersProfile/MVServices";
+import Navbar from "@/Components/Utility/Navbar";
 import React from "react";
 
 const MangersVendorsProfiles = () => {

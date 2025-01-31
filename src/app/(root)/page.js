@@ -6,7 +6,6 @@ import Landing from "../../Components/Home/Landing";
 const HomePage = () => {
   return (
     <>
-      <Navbar />
       <Banner />
       <Landing />
     </>
