@@ -1,12 +1,11 @@
 import React from "react";
-import Navbar from "../../Components/Utility/Navbar";
-import Banner from "../../Components/Home/Banner";
-import Landing from "../../Components/Home/Landing";
+import Navbar from "../../components/Utility/Navbar";
+import Banner from "../../components/Home/Banner";
+import Landing from "../../components/Home/Landing";
 
 const HomePage = () => {
   return (
     <>
-      <Navbar />
       <Banner />
       <Landing />
     </>

@@ -1,7 +1,7 @@
-import MainDetails from "@/Components/UserProfile/MVUsersProfile/MainDetails";
-import MVAboutUs from "@/Components/UserProfile/MVUsersProfile/MVAboutUs";
-import MVPastEvents from "@/Components/UserProfile/MVUsersProfile/MVPastEvents";
-import MVServices from "@/Components/UserProfile/MVUsersProfile/MVServices";
+import MainDetails from "@/components/UserProfile/MVUsersProfile/MainDetails";
+import MVAboutUs from "@/components/UserProfile/MVUsersProfile/MVAboutUs";
+import MVPastEvents from "@/components/UserProfile/MVUsersProfile/MVPastEvents";
+import MVServices from "@/components/UserProfile/MVUsersProfile/MVServices";
 import React from "react";
 
 const MangersVendorsProfiles = () => {

@@ -1,5 +1,5 @@
 
-import EventCard from '@/Components/Events/EventCard'
+import EventCard from '@/components/Events/EventCard'
 import React from 'react'
 
 const EventPage = () => {
