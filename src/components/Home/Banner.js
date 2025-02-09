@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const images = [
   "https://img.ebonow.com/Posters/P1B.webp",
   "https://img.ebonow.com/Posters/P1C.webp",
   "https://img.ebonow.com/Posters/P1D.webp",
-  "https://img.ebonow.com/Posters/P1F.webp"
+  "https://img.ebonow.com/Posters/P1F.webp",
 ];
 
 const Banner = () => {
@@ -20,18 +20,19 @@ const Banner = () => {
   }, []);
 
   return (
-  
-    <div className="relative w-full h-[400px] overflow-hidden">
+    <div className="relative  w-full bg-white my-2 p-5 h-[200px] md:h-[400px] overflow-hidden">
       {images.map((image, index) => (
         <img
           key={index}
           src={image}
           alt={`Banner ${index + 1}`}
-          className={`splide w-full splide--loop splide--ltr splide--draggable is-active is-overflow is-initialized absolute inset-0 p-4 h-fit rounded-lg object-cover transition-opacity duration-1000 ${index === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+          className={`splide  h-full w-full splide--loop splide--ltr splide--draggable is-active is-overflow is-initialized absolute inset-0  rounded-lg object-cover transition-opacity duration-1000 ${
+            index === currentIndex ? "opacity-100" : "opacity-0"
+          }`}
         />
       ))}
     </div>
   );
-}
+};
 
 export default Banner;
