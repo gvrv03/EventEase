@@ -16,13 +16,13 @@ const Authentication = () => {
       />
       <div className="flex gap-4 items-center">
         <button 
-          className={`flex items-center gap-2 text-sm font-semibold transition-all ${isSignIn ? 'text-blue-500 border-b-2 border-blue-600' : 'text-gray-500'}`} 
+          className={`flex items-center gap-2 text-sm pb-2 font-semibold transition-all ${isSignIn ? 'text-blue-500 border-b-2  border-blue-600' : 'text-gray-500'}`} 
           onClick={() => setIsSignIn(true)}
         >
           <LogIn size={16} /> Sign In
         </button>
         <button 
-          className={`flex items-center gap-2 text-sm font-semibold transition-all ${!isSignIn ? 'text-blue-500 border-b-2 border-blue-600' : 'text-gray-500'}`} 
+          className={`flex items-center gap-2 text-sm pb-2 font-semibold transition-all ${!isSignIn ? 'text-blue-500 border-b-2  border-blue-600' : 'text-gray-500'}`} 
           onClick={() => setIsSignIn(false)}
         >
           <UserPlus size={16} /> Sign Up
