@@ -1,4 +1,4 @@
-// src/app/register/page.js
+
 'use client';
 
 import { useState } from 'react';
@@ -10,9 +10,9 @@ export default function Register() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    // Handle the registration logic here
+   
     console.log('User Registered:', { name, dob, address });
-    // Redirect to a success page or dashboard
+    
   };
 
   return (
