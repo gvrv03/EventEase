@@ -2,12 +2,14 @@
 import { usePathname } from "next/navigation";
 import "./globals.css";
 import Navbar from "@/components/Utility/Navbar";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   return (
     <html lang="en">
       <body className={`bg-blue-50 `}>
+        <Toaster position="top-center" reverseOrder={false} />
         {pathname != "/Admin" ? (
           <>
             <Navbar />
@@ -17,9 +19,7 @@ export default function RootLayout({ children }) {
             </div>{" "}
           </>
         ) : (
-          <div className="text-sm  md:text-xl">
-            {children}
-          </div>
+          <div className="text-sm  md:text-xl">{children}</div>
         )}
       </body>
     </html>
