@@ -47,7 +47,8 @@ export default function Navbar() {
 
   return (
     <header className="sticky  bg-white  top-0 z-50 w-full border-b bg-background">
-      <div className="container flex gap-2 m-auto items-center p-2">
+      <div className="flex gap-2 m-auto items-center p-2">
+      {/* <div className="container flex gap-2 m-auto items-center p-2"> */}
         {/* Mobile Menu Button */}
         <Sheet>
           <SheetTrigger asChild>
