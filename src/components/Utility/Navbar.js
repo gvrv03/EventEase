@@ -1,8 +1,17 @@
 "use client";
 
-import { Heart, MapPin, Menu, Search, ShoppingCart, User } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import {
+  Heart,
+  MapPin,
+  Menu,
+  Search,
+  User,
+  LogOut,
+  Settings,
+  Package,
+} from "lucide-react";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,43 +22,37 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/Context/AuthContext";
 
-// Sample menu items - replace with your actual menu structure
 const menuItems = [
-  {
-    title: "Birthday Decorations",
-    href: "/birthday-decorations",
-  },
-  {
-    title: "Party Supplies",
-    href: "/party-supplies",
-  },
-  {
-    title: "Balloons",
-    href: "/balloons",
-  },
-  {
-    title: "Theme Parties",
-    href: "/theme-parties",
-  },
-  {
-    title: "Gift Items",
-    href: "/gift-items",
-  },
-  {
-    title: "Cake & Desserts",
-    href: "/cake-desserts",
-  },
+  { title: "Birthday Decorations", href: "/birthday-decorations" },
+  { title: "Party Supplies", href: "/party-supplies" },
+  { title: "Balloons", href: "/balloons" },
+  { title: "Theme Parties", href: "/theme-parties" },
+  { title: "Gift Items", href: "/gift-items" },
+  { title: "Cake & Desserts", href: "/cake-desserts" },
 ];
 
 export default function Navbar() {
   const router = useRouter();
+  const { user } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  console.log(user);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <header className="sticky  bg-white  top-0 z-50 w-full border-b bg-background">
+    <header className="sticky bg-white top-0 z-50 w-full border-b bg-background">
       <div className="flex gap-2 m-auto items-center p-2">
-      {/* <div className="container flex gap-2 m-auto items-center p-2"> */}
-        {/* Mobile Menu Button */}
         <Sheet>
           <SheetTrigger asChild>
             <Button
@@ -65,7 +68,6 @@ export default function Navbar() {
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            {/* Mobile Location Selector */}
             <div className="flex items-center space-x-2 border-b py-4">
               <MapPin className="h-4 w-4" />
               <div className="flex flex-col">
@@ -75,47 +77,26 @@ export default function Navbar() {
                 </span>
               </div>
             </div>
-            {/* Mobile Navigation Links */}
             <nav className="mt-4 flex flex-col space-y-4">
-              <Link
-                href="/Auth"
-                className="flex items-center space-x-2 text-sm"
-              >
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </Link>
-              <Link
-                href="/wishlist"
-                className="flex items-center space-x-2 text-sm"
-              >
-                <Heart className="h-4 w-4" />
-                <span>Wishlist</span>
-              </Link>
-              {/* Menu Categories */}
-              <div className="border-t pt-4">
-                <h3 className="mb-2 text-sm font-semibold">Categories</h3>
-                {menuItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block py-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-                  >
-                    {item.title}
-                  </Link>
-                ))}
-              </div>
+              {menuItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block py-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {item.title}
+                </Link>
+              ))}
             </nav>
           </SheetContent>
         </Sheet>
 
-        {/* Logo */}
         <Link href="/" className="mr-6 flex items-center ">
           <span className="text-base md:text-2xl font-bold text-primary">
             EventEase
           </span>
         </Link>
 
-        {/* Location Selector - Hidden on Mobile */}
         <Button
           variant="ghost"
           className="mr-6 hidden items-center space-x-2 lg:flex"
@@ -127,7 +108,6 @@ export default function Navbar() {
           </div>
         </Button>
 
-        {/* Search Bar */}
         <div className="flex flex-1 items-center space-x-2">
           <div className="relative w-full max-w-2xl">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -139,20 +119,30 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Navigation Icons */}
-        <div className="ml-auto gap-2 flex items-center ">
+        <div className="ml-auto relative gap-2 flex items-center">
+          <div className="relative" ref={dropdownRef}>
+            <Button
+              onClick={() => {
+                user.isLogin
+                  ? setIsDropdownOpen(!isDropdownOpen)
+                  : router.push("/Auth");
+              }}
+              variant="ghost"
+              size="icon"
+              className="flex gap-2 w-full px-2"
+            >
+              <User className="" />
+              <p className="md:flex hidden">Profile</p>
+            </Button>
+            {isDropdownOpen && (
+              <UserDropdown setIsDropdownOpen={setIsDropdownOpen} />
+            )}
+          </div>
           <Button
-            onClick={() => {
-              router.push("/Auth");
-            }}
             variant="ghost"
             size="icon"
             className="flex gap-2 w-full px-2"
           >
-            <User className="" />
-            <p className="md:flex hidden">Profile</p>
-          </Button>
-          <Button variant="ghost" size="icon" className="flex gap-2 w-full px-2">
             <Heart className="" />
             <p className="md:flex hidden">Wishlist</p>
           </Button>
@@ -161,3 +151,54 @@ export default function Navbar() {
     </header>
   );
 }
+
+const UserDropdown = ({ setIsDropdownOpen }) => {
+  const { logoutUser, user } = useAuth();
+  const router = useRouter();
+  return (
+    <div className="absolute right-0 mt-3 min-w-52 bg-white border border-gray-200 shadow-md rounded-md p-2 z-50">
+      <div className=" border-b">
+        <div>
+          Hello{" "}
+          <span className="text-blue-500 font-semibold">
+            {user?.userData?.name ? user?.userData?.name : "User"}
+          </span>
+        </div>
+        <button
+          onClick={() => {
+            router.push("/UserProfiles");
+          setIsDropdownOpen(false);
+
+          }}
+          className="text-xs text-red-500 text-center w-full border border-red-200  my-2 p-1 rounded-md"
+        >
+          Complete your profile
+        </button>
+      </div>
+      <Link
+        href="/orders"
+        className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"
+      >
+        <Package className="h-4 w-4" />
+        <span>Orders</span>
+      </Link>
+      <Link
+        href="/settings"
+        className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"
+      >
+        <Settings className="h-4 w-4" />
+        <span>Settings</span>
+      </Link>
+      <button
+        onClick={() => {
+          logoutUser();
+          setIsDropdownOpen(false);
+        }}
+        className="flex w-full items-center space-x-2 p-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
+      >
+        <LogOut className="h-4 w-4" />
+        <span>Logout</span>
+      </button>
+    </div>
+  );
+};

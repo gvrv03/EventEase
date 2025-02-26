@@ -71,9 +71,13 @@ export const sendOTP = async (phoneNo) => {
     ID.unique(),
     `+91${phoneNo}`
   );
-  return session
+  return session;
 };
 
 export const verifyOTP = async (user, otp) => {
   await UserAccount.createSession(user.userId, otp);
+};
+
+export const updateUser = async ( userName) => {
+  await UserAccount.updateName(userName);
 };
