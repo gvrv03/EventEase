@@ -26,11 +26,7 @@ import { useAuth } from "@/Context/AuthContext";
 
 const menuItems = [
   { title: "Birthday Decorations", href: "/birthday-decorations" },
-  { title: "Party Supplies", href: "/party-supplies" },
-  { title: "Balloons", href: "/balloons" },
-  { title: "Theme Parties", href: "/theme-parties" },
-  { title: "Gift Items", href: "/gift-items" },
-  { title: "Cake & Desserts", href: "/cake-desserts" },
+ 
 ];
 
 export default function Navbar() {
