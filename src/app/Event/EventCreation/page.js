@@ -1,8 +1,9 @@
+import EventCreate from '@/components/Events/UserEvent/EventCreate'
 import React from 'react'
 
 const EventCreation = () => {
   return (
-    <div>EventCreation</div>
+    <div><EventCreate/></div>
   )
 }
 
