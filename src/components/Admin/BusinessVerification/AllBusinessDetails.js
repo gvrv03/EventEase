@@ -7,6 +7,7 @@ import moment from "moment/moment";
 import { Query } from "appwrite";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { useAuth } from "@/Context/AuthContext";
 
 const BusinessVerification = () => {
   const [businessData, setBusinessData] = useState([]);
@@ -31,16 +32,24 @@ const BusinessVerification = () => {
   }, []);
 
   const [approvedLoadingId, setApprovedLoadingId] = useState(null);
-
-  const ApprovedBusiness = async (docID) => {
+  const { user } = useAuth();
+  const ApprovedBusiness = async (docID, Role) => {
     try {
       setApprovedLoadingId(docID); // Set loading state for the specific business
       await UpdateCollectionData(BusinessDetailCollection, docID, {
         Status: true,
       });
+      const res = await fetch("/api/BusinessApproval", {
+        method: "POST",
+        body: JSON.stringify({ userID: user?.userData?.$id, Role: Role }),
+      });
 
+      const data = await res.json();
+      if (data?.error) {
+        throw new Error(data?.error);
+      }
       toast.success("Business Approved Successfully");
-      getData(); // Refresh the list after approval
+      getData();
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -109,7 +118,7 @@ const BusinessVerification = () => {
                 View Profile
               </Button>
               <Button
-                onClick={() => ApprovedBusiness(business.$id)}
+                onClick={() => ApprovedBusiness(business.$id, business.Role)}
                 disabled={business.Status || approvedLoadingId === business.$id}
                 className="text-xs p-1 disabled:bg-blue-300 font-semibold px-5"
               >

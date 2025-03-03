@@ -4,7 +4,7 @@ import { ShoppingCart, Heart, Ticket, Package } from "lucide-react";
 
 const UserMenu = () => {
   return (
-    <div className="mt-2 grid grid-cols-2 gap-2  rounded-md">
+    <div className="grid grid-cols-2 gap-2  rounded-md">
       <Button className="w-full bg-white hover:bg-gray-100 shadow-md  text-gray-800 font-semibold uppercase flex justify-start items-center gap-2">
         <ShoppingCart size={16} /> Cart
       </Button>

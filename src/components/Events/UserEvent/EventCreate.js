@@ -17,14 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
 import React, { useState } from "react";
 
 const EventCreate = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-
   return (
     <div className="bg-white p-2 rounded-lg mt-2 md:max-w-[50%] mx-auto">
       <h3 className="font-semibold text-lg md:text-xl">Create your Event</h3>
@@ -38,9 +33,9 @@ const EventCreate = () => {
           <Textarea className="bg-white" />
         </div>
 
-        <div className="flex gap-2 md:flex-row flex-col">
+        <div className="gap-2 grid grid-cols-1 md:grid-cols-2 ">
           <div className="flex flex-col w-full gap-2">
-            <Label>Select Service</Label>
+            <Label>Select Provider Type</Label>
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Select Service" />
@@ -74,36 +69,86 @@ const EventCreate = () => {
 
           <div className="flex flex-col w-full gap-2">
             <Label>Event Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full pl-3 text-left font-normal",
-                    !selectedDate && "text-muted-foreground"
-                  )}
-                >
-                  {selectedDate ? (
-                    format(selectedDate, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  disabled={(date) => date < new Date("1900-01-01")}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <Input type="Date" />
+          </div>
+          <div className="flex flex-col w-full gap-2">
+            <Label>Approx. Budget (₹) </Label>
+            <Input type="number" />
           </div>
         </div>
 
+        <div>
+          <Label>Select Facility</Label>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+            {[
+              "Photography",
+              "Decoration",
+              "Firework",
+              "Sound System",
+              "Water Supply",
+              "Art & Craft",
+              "Lighting Setup",
+              "Stage Setup",
+              "Catering",
+              "Security",
+              "Live Streaming",
+              "Event Hosting",
+              "Transportation",
+              "Ticketing & Registration",
+              "VIP Lounge",
+              "First Aid Services",
+            ].map((service, index) => (
+              <div key={index} className="flex gap-2 items-center">
+                <Input className="w-3" type="checkbox" />
+                <p className="text-xs text-gray-700">{service}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex-col flex gap-2">
+          <Label>Select Vendor/Event Manager</Label>
+          <div className="w-full  flex gap-2 overflow-x-scroll ">
+            <div className="p-2 border rounded-lg max-w-[200px] min-w-[200px] ">
+              <h5 className="text-sm">Gaurav Narnaware</h5>
+              <p className="text-[10px] px-1 w-fit text-red-600">
+                Event Manager
+              </p>
+              <button className="w-full text-xs border rounded-md py-1">
+                Select
+              </button>
+            </div>
+            <div className="p-2 border rounded-lg max-w-[200px] min-w-[200px] ">
+              <h5 className="text-sm">Gaurav Narnaware</h5>
+              <p className="text-[10px] px-1 w-fit text-red-600">
+                Event Manager
+              </p>
+              <button className="w-full text-xs border rounded-md py-1">
+                Select
+              </button>
+            </div>
+
+            <div className="p-2 border rounded-lg max-w-[200px] min-w-[200px] ">
+              <h5 className="text-sm">Gaurav Narnaware</h5>
+              <p className="text-[10px] px-1 w-fit text-red-600">
+                Event Manager
+              </p>
+              <button className="w-full text-xs border rounded-md py-1">
+                Select
+              </button>
+            </div>
+
+            <div className="p-2 border rounded-lg max-w-[200px] min-w-[200px] ">
+              <h5 className="text-sm">Gaurav Narnaware</h5>
+              <p className="text-[10px] px-1 w-fit text-red-600">
+                Event Manager
+              </p>
+              <button className="w-full text-xs border rounded-md py-1">
+                Select
+              </button>
+            </div>
+          </div>
+        </div>
         <div>
           <Label>Upload Decoration Idea (Optional)</Label>
           <Input type="file" />

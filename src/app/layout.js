@@ -15,8 +15,7 @@ export default function RootLayout({ children }) {
           {!pathname.startsWith("/Admin") ? (
             <>
               <Navbar />
-              <div className="text-sm px-2  md:text-xl">
-                {/* <div className="text-sm px-2 md:px-0 md:text-xl  container m-auto"> */}
+              <div className="text-sm px-2  mt-2 md:text-xl">
                 {children}
               </div>{" "}
             </>
