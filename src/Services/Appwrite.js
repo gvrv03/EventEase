@@ -1,6 +1,12 @@
-import { ID, Permission, Role } from "appwrite";
+import { ID, Permission, Query, Role } from "appwrite";
 
-const { AppwriteDatabase, client, UserAccount } = require("@/config/appwrite");
+const {
+  AppwriteDatabase,
+  client,
+  UserAccount,
+  UsersCollection,
+  BusinessDetailCollection,
+} = require("@/config/appwrite");
 
 export const ListCollectionData = async (collectionID, queries) => {
   try {
@@ -29,22 +35,19 @@ export const UpdateCollectionData = async (collectionID, docID, data) => {
   }
 };
 
-export const AddDataToCollection = async (collectionID, data, slug) => {
+export const AddDataToCollection = async (collectionID, data, userID) => {
   try {
-    const SLUGID = slug ? slug : ID.unique();
+    const SLUGID = ID.unique();
     const res = await AppwriteDatabase.createDocument(
       process.env.NEXT_PUBLIC_DATABASEID,
       collectionID,
       SLUGID,
-      data
-      // [
-      //   Permission.update(Role.user("676ef0580015e94c5768")),
-      //   Permission.delete(Role.user("676ef0580015e94c5768")),
-      //   Permission.read(Role.user("676ef0580015e94c5768")),
-      //   Permission.read(Role.label(["admin", "viewer"])),
-      //   Permission.delete(Role.label(["admin"])),
-      //   Permission.update(Role.label(["admin"])),
-      // ]
+      data,
+      [
+        Permission.update(Role.user(userID)),
+        Permission.delete(Role.user(userID)),
+        Permission.read(Role.user(userID)),
+      ]
     );
     return res;
   } catch (error) {
@@ -76,8 +79,38 @@ export const sendOTP = async (phoneNo) => {
 
 export const verifyOTP = async (user, otp) => {
   await UserAccount.createSession(user.userId, otp);
+  const accountDetails = await UserAccount.get();
+
+  const checkUser = await ListCollectionData(UsersCollection, [
+    Query.equal("$id", user.userId),
+  ]);
+
+  if (!checkUser?.documents?.length > 0) {
+    await AddDataToCollection(
+      UsersCollection,
+      { Name: accountDetails?.name ? accountDetails?.name : "User" },
+      user.userId
+    );
+  } else {
+    await UpdateCollectionData(UsersCollection, user.userId, {
+      Name: accountDetails?.name ? accountDetails?.name : "User",
+    });
+  }
 };
 
-export const updateUser = async ( userName) => {
+export const updateUser = async (userName) => {
   await UserAccount.updateName(userName);
+  const accountDetails = await UserAccount.get();
+  await UpdateCollectionData(UsersCollection, accountDetails?.$id, {
+    Name: accountDetails?.name ? accountDetails?.name : "User",
+  });
+};
+
+export const getBusinessDetails = async () => {
+  const accountDetails = await UserAccount.get();
+  const res = await ListCollectionData(BusinessDetailCollection, [
+    Query.equal("usersDetails", accountDetails.$id),
+    Query.orderDesc(),
+  ]);
+  return res?.documents;
 };

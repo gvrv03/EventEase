@@ -35,6 +35,8 @@ const PhoneAuth = () => {
     setLoading(true);
     try {
       const res = await sendOTP(phone);
+      console.log(res);
+
       setOtpSent(true);
       setCurUser(res);
       setTimer(59);
