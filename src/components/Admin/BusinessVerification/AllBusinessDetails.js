@@ -1,10 +1,6 @@
 "use client";
 import { BusinessDetailCollection } from "@/config/appwrite";
-import {
-  getBusinessDetails,
-  ListCollectionData,
-  UpdateCollectionData,
-} from "@/Services/Appwrite";
+import { ListCollectionData, UpdateCollectionData } from "@/Services/Appwrite";
 import { useEffect, useState } from "react";
 import { Loader2, CheckCircle, Clock, RefreshCcw } from "lucide-react";
 import moment from "moment/moment";
@@ -21,6 +17,7 @@ const BusinessVerification = () => {
       const res = await ListCollectionData(BusinessDetailCollection, [
         Query.orderDesc("$createdAt"),
       ]);
+
       setBusinessData(res?.documents);
     } catch (error) {
       console.error("Error fetching business data:", error);
@@ -28,7 +25,6 @@ const BusinessVerification = () => {
       setLoading(false);
     }
   };
-  console.log(businessData);
 
   useEffect(() => {
     getData();
@@ -42,6 +38,7 @@ const BusinessVerification = () => {
       await UpdateCollectionData(BusinessDetailCollection, docID, {
         Status: true,
       });
+
       toast.success("Business Approved Successfully");
       getData(); // Refresh the list after approval
     } catch (error) {

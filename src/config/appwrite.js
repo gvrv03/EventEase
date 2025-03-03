@@ -1,3 +1,5 @@
+
+
 import { Client, Account, Databases, Storage } from "appwrite";
 export const client = new Client();
 
@@ -14,3 +16,5 @@ export const UserAccount = new Account(client);
 export const AppwriteDatabase = new Databases(client);
 export const StorageBucket = new Storage(client);
 export { ID } from "appwrite";
+
+
