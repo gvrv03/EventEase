@@ -6,6 +6,7 @@ import { sendOTP, verifyOTP } from "@/Services/Appwrite";
 import toast from "react-hot-toast";
 import { OTPInput } from "./OTPInput";
 import { useAuth } from "@/Context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const PhoneAuth = () => {
   const [phone, setPhone] = useState("");
@@ -35,8 +36,6 @@ const PhoneAuth = () => {
     setLoading(true);
     try {
       const res = await sendOTP(phone);
-      console.log(res);
-
       setOtpSent(true);
       setCurUser(res);
       setTimer(59);
@@ -48,7 +47,7 @@ const PhoneAuth = () => {
       setLoading(false);
     }
   };
-
+  const router = useRouter();
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -56,6 +55,7 @@ const PhoneAuth = () => {
       await verifyOTP(curUser, otp);
       toast.success("OTP Verified Successfully!");
       checkUserStatus();
+      router.push("/UserProfiles");
     } catch (error) {
       toast.error(error.message);
     } finally {
