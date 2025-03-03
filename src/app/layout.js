@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
       <AuthProvider>
         <body className={`bg-blue-50 `}>
           <Toaster position="top-center" reverseOrder={false} />
-          {pathname != "/Admin" ? (
+          {!pathname.startsWith("/Admin") ? (
             <>
               <Navbar />
               <div className="text-sm px-2  md:text-xl">

@@ -110,7 +110,7 @@ export const getBusinessDetails = async () => {
   const accountDetails = await UserAccount.get();
   const res = await ListCollectionData(BusinessDetailCollection, [
     Query.equal("usersDetails", accountDetails.$id),
-    Query.orderDesc(),
+    Query.orderDesc("$createdAt"),
   ]);
   return res?.documents;
 };
