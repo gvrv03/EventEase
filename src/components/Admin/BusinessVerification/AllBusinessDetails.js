@@ -32,7 +32,6 @@ const BusinessVerification = () => {
   }, []);
 
   const [approvedLoadingId, setApprovedLoadingId] = useState(null);
-  const { user } = useAuth();
   const ApprovedBusiness = async (userID,docID, Role) => {
     try {
       setApprovedLoadingId(docID); // Set loading state for the specific business
