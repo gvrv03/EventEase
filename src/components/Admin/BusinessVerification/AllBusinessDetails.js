@@ -33,7 +33,7 @@ const BusinessVerification = () => {
 
   const [approvedLoadingId, setApprovedLoadingId] = useState(null);
   const { user } = useAuth();
-  const ApprovedBusiness = async (docID, Role) => {
+  const ApprovedBusiness = async (userID,docID, Role) => {
     try {
       setApprovedLoadingId(docID); // Set loading state for the specific business
       await UpdateCollectionData(BusinessDetailCollection, docID, {
@@ -41,7 +41,7 @@ const BusinessVerification = () => {
       });
       const res = await fetch("/api/BusinessApproval", {
         method: "POST",
-        body: JSON.stringify({ userID: user?.userData?.$id, Role: Role }),
+        body: JSON.stringify({ userID, Role: Role }),
       });
 
       const data = await res.json();
@@ -118,7 +118,7 @@ const BusinessVerification = () => {
                 View Profile
               </Button>
               <Button
-                onClick={() => ApprovedBusiness(business.$id, business.Role)}
+                onClick={() => ApprovedBusiness(business?.usersDetails?.$id,business.$id, business.Role)}
                 disabled={business.Status || approvedLoadingId === business.$id}
                 className="text-xs p-1 disabled:bg-blue-300 font-semibold px-5"
               >
@@ -129,6 +129,8 @@ const BusinessVerification = () => {
             </div>
           </div>
         ))}
+        
+        
       </div>
     </div>
   );

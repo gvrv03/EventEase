@@ -1,5 +1,3 @@
-import { BusinessDetailCollection } from "@/config/appwrite";
-import { UpdateCollectionData } from "@/Services/Appwrite";
 
 const { AllUsers } = require("@/config/appwriteServer");
 const { NextResponse } = require("next/server");
