@@ -81,16 +81,21 @@ export const sendOTP = async (phoneNo) => {
 export const verifyOTP = async (user, otp) => {
   await UserAccount.createSession(user.userId, otp);
   const accountDetails = await UserAccount.get();
-
   const checkUser = await ListCollectionData(UsersCollection, [
     Query.equal("$id", user.userId),
   ]);
 
   if (!checkUser?.documents?.length > 0) {
-    await AddDataToCollection(
+    await AppwriteDatabase.createDocument(
+      process.env.NEXT_PUBLIC_DATABASEID,
       UsersCollection,
+      user.userId,
       { Name: accountDetails?.name ? accountDetails?.name : "User" },
-      user.userId
+      [
+        Permission.update(Role.user(user.userId)),
+        Permission.delete(Role.user(user.userId)),
+        Permission.read(Role.user(user.userId)),
+      ]
     );
   } else {
     await UpdateCollectionData(UsersCollection, user.userId, {
@@ -115,6 +120,3 @@ export const getBusinessDetails = async () => {
   ]);
   return res?.documents;
 };
-
-
-

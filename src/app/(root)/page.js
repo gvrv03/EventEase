@@ -7,6 +7,7 @@ import EventPage from "../Event/page";
 import OurEvents from "@/components/Home/OurEvents";
 import AIEventCreation from "@/components/Events/AIEventCreation";
 import JoinEMV from "@/components/UserProfile/Users/JoinEMV";
+import Features from "@/components/Home/Features";
 
 const HomePage = () => {
   return (
@@ -14,6 +15,7 @@ const HomePage = () => {
       <Banner />
       <Landing />
 
+      <Features />
       <OurEvents />
       <JoinEMV />
       <AIEventCreation />
