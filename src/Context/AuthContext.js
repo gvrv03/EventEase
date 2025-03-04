@@ -5,6 +5,7 @@ import {
   GDGCDatabase,
   ID,
   UserAccount,
+  UsersCollection,
 } from "@/config/appwrite";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -13,14 +14,15 @@ import { AddDataToCollection, GetSingleDocument } from "@/Services/Appwrite";
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   // Modal State
-
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({
     isLogin: false,
     userData: {},
     isEventManager: false,
     isVendor: false,
+    isAdmin: false,
   });
+
   const [userLoading, setuserLoading] = useState(false);
   const router = useRouter();
 
@@ -32,12 +34,14 @@ export const AuthProvider = ({ children }) => {
     try {
       setuserLoading(true);
       const accountDetails = await UserAccount.get();
+
       if (accountDetails) {
         return setUser({
           isLogin: true,
           userData: accountDetails,
-          isEventManager: false,
-          isVendor: false,
+          isEventManager: accountDetails?.labels?.includes("EventManager"),
+          isVendor: accountDetails?.labels?.includes("Vendor"),
+          isAdmin: accountDetails?.labels?.includes("admin"),
         });
       } else {
         return setUser({
@@ -45,6 +49,7 @@ export const AuthProvider = ({ children }) => {
           userData: null,
           isEventManager: false,
           isVendor: false,
+          isAdmin: false,
         });
       }
     } catch (error) {
@@ -54,28 +59,13 @@ export const AuthProvider = ({ children }) => {
         userData: null,
         isEventManager: false,
         isVendor: false,
+        isAdmin: false,
       });
     } finally {
       setLoading(false);
       setuserLoading(false);
     }
   };
-
-  // const updateUserDetails = async (userID, updatedData) => {
-  //   try {
-  //     const response = await AppwriteDatabase.updateDocument(
-  //       GDGCDatabase,
-  //       UsersCollection,
-  //       userID,
-  //       updatedData
-  //     );
-  //     setUser(response);
-  //     toast.success("User details updated successfully!");
-  //     return response;
-  //   } catch (error) {
-  //     return toast.error(error.message);
-  //   }
-  // };
 
   const logoutUser = async () => {
     try {
@@ -87,17 +77,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const [EMVDetails, setEMVDetails] = useState({});
+
   const contextData = {
     logoutUser,
     user,
     checkUserStatus,
+    EMVDetails,
+    setEMVDetails
   };
 
   return (
-    <AuthContext.Provider value={contextData}>
-      {/* {loading ? <FullScreenSpinner />:children} */}
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
   );
 };
 

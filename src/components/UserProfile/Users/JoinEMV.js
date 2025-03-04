@@ -74,6 +74,8 @@ const SubmitBusinessProof = () => {
         },
         user?.userData?.$id
       );
+      await getBusinessDetails()
+      toast.success("Request Submitted");
       setFormData({
         Role: "",
         BName: "",
@@ -81,8 +83,6 @@ const SubmitBusinessProof = () => {
         GSTIN: "",
         BProof: null,
       });
-      await getBusinessDetails()
-      toast.success("Request Submitted");
     } catch (error) {
       toast.error(error.message);
     } finally {
