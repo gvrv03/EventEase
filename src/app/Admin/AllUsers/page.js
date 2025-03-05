@@ -9,4 +9,8 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+
+
+export default BlogPage;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
