@@ -181,7 +181,7 @@ const MainDetails = ({ userID,fetchUserDetails }) => {
                   </Button>
                 </>
               ) : (
-                <Button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2 rounded-md transition-colors duration-200 flex items-center gap-2">
+                <Button className="hidden bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2 rounded-md transition-colors duration-200  items-center gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"

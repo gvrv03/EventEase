@@ -41,7 +41,7 @@ const MangersVendorsProfiles = ({ params }) => {
     <div className="flex-col flex gap-2 md:gap-5">
       <MainDetails userID={userID} fetchUserDetails={fetchUserDetails} />
       <MVPastEvents />
-      <MVServices />
+      <MVServices userID={userID} fetchUserDetails={fetchUserDetails} />
     </div>
   );
 };
