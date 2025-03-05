@@ -12,7 +12,7 @@ const MangersVendorsProfiles = ({ params }) => {
   const { setEMVDetails } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchUserDetails = async (userID) => {
+  const fetchUserDetails = async () => {
     try {
       setIsLoading(true);
       const userDetails = await GetSingleDocument(userID, UsersCollection);
@@ -30,7 +30,7 @@ const MangersVendorsProfiles = ({ params }) => {
   };
 
   useEffect(() => {
-    fetchUserDetails(userID);
+    fetchUserDetails();
   }, []);
 
   if (isLoading) {
@@ -39,7 +39,7 @@ const MangersVendorsProfiles = ({ params }) => {
 
   return (
     <div className="flex-col flex gap-2 md:gap-5">
-      <MainDetails userID={userID} />
+      <MainDetails userID={userID} fetchUserDetails={fetchUserDetails} />
       <MVPastEvents />
       <MVServices />
     </div>

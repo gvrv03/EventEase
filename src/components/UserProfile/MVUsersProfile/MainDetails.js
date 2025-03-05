@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil } from "lucide-react";
+import { UpdateCollectionData } from "@/Services/Appwrite";
+import { UsersCollection } from "@/config/appwrite";
+import toast from "react-hot-toast";
 
-const MainDetails = ({ userID }) => {
+const MainDetails = ({ userID,fetchUserDetails }) => {
   const { user, EMVDetails } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [editedDetails, setEditedDetails] = useState({
@@ -30,9 +33,20 @@ const MainDetails = ({ userID }) => {
       [name]: value,
     }));
   };
-
-  const handleSave = () => {
-    setIsEditing(false);
+  const [loading, setLoading] = useState(false);
+  const handleSave = async (e) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      await UpdateCollectionData(UsersCollection, userID, editedDetails);
+      fetchUserDetails()
+      toast.success("Details updated successfully");
+      setIsEditing(false);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -53,7 +67,7 @@ const MainDetails = ({ userID }) => {
     <div className="bg-white md:p-5 border border-gray-100 p-2 md:rounded-md">
       <img
         src="https://marketplace.canva.com/EAE7AbabFNY/1/0/1600w/canva-blue-gold-elegant-minimalist-digital-marketer-linkedin-banner-yFznKtTfH0U.jpg"
-        className="w-full rounded-md h-48 object-cover"
+        className="w-full rounded-md h-32  md:h-48 object-cover"
         alt="Banner"
       />
       <div className="-mt-14 md:-mt-32 flex-col flex gap-2 md:gap-5">
@@ -73,7 +87,7 @@ const MainDetails = ({ userID }) => {
           )}
         </div>
 
-        <div className="flex-col flex gap-4 p-4">
+        <div className="flex-col flex gap-4 p-2">
           <div className="flex justify-between items-center">
             {isEditing ? (
               <Input
@@ -89,7 +103,40 @@ const MainDetails = ({ userID }) => {
                 {EMVDetails?.Name}
               </h3>
             )}
-            <div className="flex gap-2">
+            
+          </div>
+
+          {isEditing ? (
+            <Textarea
+              name="AboutUs"
+              value={editedDetails.AboutUs}
+              onChange={handleInputChange}
+              placeholder="Tell us about yourself or your business..."
+              className="text-gray-600 bg-transparent resize-none min-h-[100px] border-gray-300 focus:border-blue-500 transition-colors duration-200"
+              style={{ minHeight: "auto", height: "auto" }}
+            />
+          ) : (
+            <p className="text-gray-600 whitespace-pre-wrap">
+              {EMVDetails?.AboutUs || "No description available"}
+            </p>
+          )}
+
+          {isEditing ? (
+            <Input
+              name="Address"
+              value={editedDetails.Address}
+              onChange={handleInputChange}
+              placeholder="Enter your address"
+              className="text-gray-400  bg-transparent border-gray-300 focus:border-blue-500 transition-colors duration-200"
+              // style={{ fontSize: "inherit" }}
+            />
+          ) : (
+            <p className="text-gray-400 textsm">
+              {EMVDetails?.Address || "No address provided"}
+            </p>
+          )}
+
+<div className="flex gap-2">
               {isEditing ? (
                 <>
                   <Button
@@ -110,11 +157,11 @@ const MainDetails = ({ userID }) => {
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    Save
+                    {loading ? "Saving..." : "Save"}
                   </Button>
                   <Button
                     onClick={handleCancel}
-                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-5 py-2 rounded-md transition-colors duration-200 flex items-center gap-2"
+                    className="bg-white hover:bg-gray-100 text-gray-600 font-semibold px-5 py-2 rounded-md transition-colors duration-200 flex items-center gap-2"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -153,44 +200,13 @@ const MainDetails = ({ userID }) => {
                 </Button>
               )}
             </div>
-          </div>
-
-          {isEditing ? (
-            <Textarea
-              name="AboutUs"
-              value={editedDetails.AboutUs}
-              onChange={handleInputChange}
-              placeholder="Tell us about yourself or your business..."
-              className="text-gray-600 bg-transparent resize-none min-h-[100px] border-gray-300 focus:border-blue-500 transition-colors duration-200"
-              style={{ minHeight: "auto", height: "auto" }}
-            />
-          ) : (
-            <p className="text-gray-600 whitespace-pre-wrap">
-              {EMVDetails?.AboutUs || "No description available"}
-            </p>
-          )}
-
-          {isEditing ? (
-            <Input
-              name="Address"
-              value={editedDetails.Address}
-              onChange={handleInputChange}
-              placeholder="Enter your address"
-              className="text-gray-400  bg-transparent border-gray-300 focus:border-blue-500 transition-colors duration-200"
-              style={{ fontSize: "inherit" }}
-            />
-          ) : (
-            <p className="text-gray-400 textsm">
-              {EMVDetails?.Address || "No address provided"}
-            </p>
-          )}
         </div>
 
-        <div className="flex gap-2 flex-wrap p-4">
+        <div className="flex gap-2 flex-wrap p-2">
           {EMVDetails?.data?.labels?.map((item, index) => (
             <span
               key={index}
-              className="px-4 py-2 bg-blue-100 text-blue-800 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors duration-200"
+              className="px-4 py-1 bg-blue-100 text-blue-800 rounded-md text-xs md:text-sm font-medium hover:bg-blue-200 transition-colors duration-200"
             >
               {item}
             </span>
