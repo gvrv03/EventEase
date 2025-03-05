@@ -7,7 +7,7 @@ import React from "react";
 const UserProfiles = () => {
   return (
     <div className="md:max-w-[50%] flex-col gap-2 flex m-auto " >
-      <UserMenue/>
+      {/* <UserMenue/> */}
       <EditProfile />
       <BusinessStatus/>
       <JoinEMV/>

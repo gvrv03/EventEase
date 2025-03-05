@@ -38,7 +38,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex items-center justify-center py-2">
+    <div className="flex items-center justify-center ">
       <Card className="p-2 rounded-md flex-col flex gap-2 w-full ">
         <h3 className="font-semibold text-lg">Edit Profile</h3>
         <CardContent className="p-0">

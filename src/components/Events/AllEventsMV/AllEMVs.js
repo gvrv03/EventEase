@@ -1,17 +1,18 @@
 import { AllUsers } from "@/config/appwriteServer";
 import React from "react";
 import { Phone, CheckCircle, XCircle, User } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Query } from "node-appwrite";
+import Link from "next/link";
 
-const AllUsersFetch = async () => {
-  const response = await AllUsers.list();
+const AllEMV = async () => {
+  const response = await AllUsers.list([
+    Query.contains("labels", ["Vendor", "EventManager"]),
+  ]);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
       {response?.users.map((user) => (
         <div key={user.$id} className="p-2 border rounded-md bg-white">
-          <div className="flex flex-col justify-between  space-y-2">
+          <div className="flex flex-col space-y-2">
             <div className="flex justify-between">
               <div className="flex items-center space-x-3">
                 <User className="w-6 h-6 text-blue-500" />
@@ -31,7 +32,7 @@ const AllUsersFetch = async () => {
               </div>
             </div>
             <p className="text-sm text-gray-600">{user.$id}</p>
-            <div className="flex gap-2" >
+            <div className="flex gap-2">
               {user?.labels?.map((item, index) => (
                 <div
                   key={index}
@@ -41,14 +42,13 @@ const AllUsersFetch = async () => {
                 </div>
               ))}{" "}
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4 text-green-500" />
-                <span className="text-sm  text-gray-700">
-                  {user.phone || "N/A"}
-                </span>
-              </div>
-              <Button className="text-xs font-semibold">View Profile</Button>
+            <div className="flex items-center justify-end">
+              <Link
+                href={`/UserProfiles/${user.$id}`}
+                className="rounded-sm text-white text-xs px-5 py-2 bg-blue-500 font-semibold"
+              >
+                View Profile
+              </Link>
             </div>
           </div>
         </div>
@@ -57,4 +57,4 @@ const AllUsersFetch = async () => {
   );
 };
 
-export default AllUsersFetch;
+export default AllEMV;
