@@ -7,6 +7,7 @@ const {
   UserAccount,
   UsersCollection,
   BusinessDetailCollection,
+  EventCreationCollection,
 } = require("@/config/appwrite");
 
 export const ListCollectionData = async (collectionID, queries) => {
@@ -116,6 +117,24 @@ export const getBusinessDetails = async () => {
   const accountDetails = await UserAccount.get();
   const res = await ListCollectionData(BusinessDetailCollection, [
     Query.equal("usersDetails", accountDetails.$id),
+    Query.orderDesc("$createdAt"),
+  ]);
+  return res?.documents;
+};
+
+export const getUsersEvents = async () => {
+  const accountDetails = await UserAccount.get();
+  const res = await ListCollectionData(EventCreationCollection, [
+    Query.equal("userDetails", accountDetails.$id),
+    Query.orderDesc("$createdAt"),
+  ]);
+  return res?.documents;
+};
+
+export const getEMVEvents = async () => {
+  const accountDetails = await UserAccount.get();
+  const res = await ListCollectionData(EventCreationCollection, [
+    Query.equal("EMVDetails", accountDetails.$id),
     Query.orderDesc("$createdAt"),
   ]);
   return res?.documents;

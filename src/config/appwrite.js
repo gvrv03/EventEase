@@ -10,7 +10,7 @@ client
 export const GDGCDatabase = process.env.NEXT_PUBLIC_DATABASEID;
 export const UsersCollection = process.env.NEXT_PUBLIC_USERS_ID;
 export const BusinessDetailCollection = process.env.NEXT_PUBLIC_BUSINESS_ID;
-
+export const EventCreationCollection = process.env.NEXT_PUBLIC_EVENT_CREATION_ID;
 export const UserAccount = new Account(client);
 
 export const AppwriteDatabase = new Databases(client);

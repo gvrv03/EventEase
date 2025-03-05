@@ -11,22 +11,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { formatDate } from "date-fns";
+import {
+  AppwriteDatabase,
+  EventCreationCollection,
+  ID,
+} from "@/config/appwrite";
+import { useAuth } from "@/Context/AuthContext";
+import { AddDataToCollection, UpdateCollectionData } from "@/Services/Appwrite";
+import { Permission, Role } from "appwrite";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const EventCreate = () => {
-  // Add state for all form fields
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
-    eventName: "",
-    description: "",
-    providerType: "",
-    eventCategory: "",
+    EventName: "",
+    Description: "",
+    Category: "",
     eventDate: "",
-    budget: "",
-    selectedFacilities: [],
-    selectedVendor: null,
-    decorationImage: null,
+    Services: [],
+    EMVDetails: null,
   });
+  const [providerType, setProviderType] = useState("");
+  const [creatingEvent, setCreatingEvent] = useState(false);
+  const [EMV, setEMV] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -48,36 +59,23 @@ const EventCreate = () => {
   const handleVendorSelect = (vendorId) => {
     setFormData((prev) => ({
       ...prev,
-      selectedVendor: vendorId,
+      EMVDetails: vendorId,
     }));
   };
 
   // Handle facility checkbox changes
   const handleFacilityChange = (facility) => {
     setFormData((prev) => {
-      const facilities = prev.selectedFacilities.includes(facility)
-        ? prev.selectedFacilities.filter((f) => f !== facility)
-        : [...prev.selectedFacilities, facility];
+      const facilities = prev.Services.includes(facility)
+        ? prev.Services.filter((f) => f !== facility)
+        : [...prev.Services, facility];
 
       return {
         ...prev,
-        selectedFacilities: facilities,
+        Services: facilities,
       };
     });
   };
-
-  // Handle file upload
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData((prev) => ({
-      ...prev,
-      decorationImage: file,
-    }));
-  };
-
-  const [EMV, setEMV] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchEMV = async () => {
@@ -86,13 +84,13 @@ const EventCreate = () => {
       try {
         const res = await fetch("/api/GetEMV", {
           method: "POST",
-          body: JSON.stringify({ providerType: formData.providerType }),
+          body: JSON.stringify({ providerType: providerType }),
         });
-        
+
         if (!res.ok) {
           throw new Error(`Failed to fetch providers: ${res.statusText}`);
         }
-        
+
         const data = await res.json();
         setEMV(data);
       } catch (err) {
@@ -102,22 +100,76 @@ const EventCreate = () => {
         setIsLoading(false);
       }
     };
-
-    if (formData.providerType) { // Only fetch if provider type is selected
+    if (providerType) {
       fetchEMV();
     }
-  }, [formData.providerType]);
+  }, [providerType]);
+
+  const handleEventCreate = async (e) => {
+    e.preventDefault();
+
+    // Validate required fields
+    if (
+      !formData.EventName ||
+      !formData.Description ||
+      !formData.Category ||
+      !formData.eventDate ||
+      !formData.EMVDetails ||
+      formData.Services.length === 0
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    try {
+      setCreatingEvent(true);
+
+      // Set up permissions properly
+      const permissions = [
+        // Permission.update(Role.user(formData?.EMVDetails)),
+        Permission.update(Role.user(user?.userData?.$id)),
+        Permission.read(Role.user(user?.userData?.$id)),
+        Permission.delete(Role.user(user?.userData?.$id)),
+      ];
+
+      await AppwriteDatabase.createDocument(
+        process.env.NEXT_PUBLIC_DATABASEID,
+        EventCreationCollection,
+        ID.unique(),
+        { ...formData, userDetails: user?.userData?.$id },
+        permissions
+      );
+
+      toast.success("Event Created Successfully");
+
+      // Reset form
+      setFormData({
+        EventName: "",
+        Description: "",
+        Category: "",
+        eventDate: "",
+        Services: [],
+        EMVDetails: null,
+      });
+      setProviderType("");
+    } catch (error) {
+      console.error("Event creation error:", error);
+      toast.error(error.message || "Failed to create event");
+    } finally {
+      setCreatingEvent(false);
+    }
+  };
 
   return (
     <div className="bg-white p-2 rounded-lg mt-2 md:max-w-[50%] mx-auto">
       <h3 className="font-semibold text-lg md:text-xl">Create your Event</h3>
-      <form className="flex-col flex gap-2 mt-2">
+      <form onSubmit={handleEventCreate} className="flex-col flex gap-2 mt-2">
         <div className="flex flex-col gap-2">
           <Label>Event Name</Label>
           <Input
             type="text"
-            name="eventName"
-            value={formData.eventName}
+            name="EventName"
+            value={formData.EventName}
             onChange={handleInputChange}
             className="bg-white"
           />
@@ -125,8 +177,8 @@ const EventCreate = () => {
         <div className="flex flex-col gap-2">
           <Label>Describe your Event</Label>
           <Textarea
-            name="description"
-            value={formData.description}
+            name="Description"
+            value={formData.Description}
             onChange={handleInputChange}
             className="bg-white"
           />
@@ -135,11 +187,7 @@ const EventCreate = () => {
         <div className="gap-2 grid grid-cols-1 md:grid-cols-2 ">
           <div className="flex flex-col w-full gap-2">
             <Label>Select Provider Type</Label>
-            <Select
-              onValueChange={(value) =>
-                handleSelectChange("providerType", value)
-              }
-            >
+            <Select onValueChange={(value) => setProviderType(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Service" />
               </SelectTrigger>
@@ -153,9 +201,7 @@ const EventCreate = () => {
           <div className="flex flex-col w-full gap-2">
             <Label>Event Category</Label>
             <Select
-              onValueChange={(value) =>
-                handleSelectChange("eventCategory", value)
-              }
+              onValueChange={(value) => handleSelectChange("Category", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select Event" />
@@ -180,15 +226,6 @@ const EventCreate = () => {
               type="date"
               name="eventDate"
               value={formData.eventDate}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex flex-col w-full gap-2">
-            <Label>Approx. Budget (₹) </Label>
-            <Input
-              type="number"
-              name="budget"
-              value={formData.budget}
               onChange={handleInputChange}
             />
           </div>
@@ -219,7 +256,7 @@ const EventCreate = () => {
                 <Input
                   className="w-3"
                   type="checkbox"
-                  checked={formData.selectedFacilities.includes(service)}
+                  checked={formData.Services.includes(service)}
                   onChange={() => handleFacilityChange(service)}
                 />
                 <p className="text-xs text-gray-700">{service}</p>
@@ -241,8 +278,8 @@ const EventCreate = () => {
               EMV.users.map((item, index) => (
                 <div
                   key={index}
-                  className={`p-2 border rounded-lg max-w-[200px] min-w-[200px] ${
-                    formData.selectedVendor === item.$id
+                  className={`p-2  border rounded-lg max-w-[200px] min-w-[200px] ${
+                    formData.EMVDetails === item.$id
                       ? "bg-blue-50 border-blue-500"
                       : ""
                   }`}
@@ -253,19 +290,26 @@ const EventCreate = () => {
                       <span key={index}>{label}</span>
                     ))}
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => handleVendorSelect(item.$id)}
-                    className={`w-full text-xs border rounded-md py-1 ${
-                      formData.selectedVendor === item.$id
-                        ? "bg-blue-500 text-white border-blue-500"
-                        : "hover:bg-gray-50"
-                    }`}
-                  >
-                    {formData.selectedVendor === item.$id
-                      ? "Selected"
-                      : "Select"}
-                  </button>
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/UserProfiles/${item.$id}`}
+                      target="_blank"
+                      className="text-xs  bg-blue-500  w-full text-center font-semibold text-white rounded-md py-1 "
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleVendorSelect(item.$id)}
+                      className={`w-full text-xs border rounded-md py-1 ${
+                        formData.EMVDetails === item.$id
+                          ? "bg-blue-500 text-white font-semibold border-blue-500"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      {formData.EMVDetails === item.$id ? "Selected" : "Select"}
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
@@ -275,12 +319,13 @@ const EventCreate = () => {
             )}
           </div>
         </div>
-
-        <div>
-          <Label>Upload Decoration Idea (Optional)</Label>
-          <Input type="file" onChange={handleFileChange} />
-        </div>
-        <Button className="bg-blue-500 text-white">Create Event</Button>
+        <Button
+          type="submit"
+          className="bg-blue-500 text-white"
+          disabled={creatingEvent}
+        >
+          {creatingEvent ? "Creating Event..." : "Create Event"}
+        </Button>
       </form>
     </div>
   );
@@ -290,7 +335,7 @@ export default EventCreate;
 
 const LoadingSkeleton = () => (
   <>
-    {[1, 2, 3,4].map((item) => (
+    {[1, 2, 3, 4].map((item) => (
       <div
         key={item}
         className="p-2 border rounded-lg max-w-[200px] min-w-[200px] animate-pulse"
