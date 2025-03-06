@@ -10,6 +10,10 @@ import {
   LogOut,
   Settings,
   Package,
+  User2,
+  Calendar1,
+  User2Icon,
+  Users2,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -25,8 +29,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/Context/AuthContext";
 
 const menuItems = [
-  { title: "Birthday Decorations", href: "/birthday-decorations" },
- 
+  { title: "Profile", href: "/UserProfiles" },
+  { title: "My Events", href: "/Event/MyEvents" },
+  { title: "All Event Managers/Vendors", href: "/UserProfiles/EMV" },
 ];
 
 export default function Navbar() {
@@ -67,18 +72,18 @@ export default function Navbar() {
             <div className="flex items-center space-x-2 border-b py-4">
               <MapPin className="h-4 w-4" />
               <div className="flex flex-col">
-                <span className="text-sm font-medium">Mumbai</span>
+                <span className="text-sm font-medium">Nagpur</span>
                 <span className="text-xs text-muted-foreground">
-                  Mumbai city
+                  Nagpur city
                 </span>
               </div>
             </div>
-            <nav className="mt-4 flex flex-col space-y-4">
+            <nav className="mt-4 flex flex-col space-y-2">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block py-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+                  className="block  text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   {item.title}
                 </Link>
@@ -93,17 +98,6 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <Button
-          variant="ghost"
-          className="mr-6 hidden items-center space-x-2 lg:flex"
-        >
-          <MapPin className="h-4 w-4" />
-          <div className="flex flex-col items-start text-sm">
-            <span className="font-medium">Mumbai</span>
-            <span className="text-xs text-muted-foreground">Mumbai city</span>
-          </div>
-        </Button>
-
         <div className="flex flex-1 items-center space-x-2">
           <div className="relative w-full max-w-2xl">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -116,6 +110,15 @@ export default function Navbar() {
         </div>
 
         <div className="ml-auto relative gap-2 flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="flex gap-2 w-full px-2"
+            onClick={() => router.push("/UserProfiles/EMV")}
+          >
+            <Users2 className="" />
+            <p className="md:flex hidden">All Event Managers/Vendors</p>
+          </Button>
           <div className="relative" ref={dropdownRef}>
             <Button
               onClick={() => {
@@ -160,30 +163,27 @@ const UserDropdown = ({ setIsDropdownOpen }) => {
             {user?.userData?.name ? user?.userData?.name : "User"}
           </span>
         </div>
-        <button
-          onClick={() => {
-            router.push("/UserProfiles");
-          setIsDropdownOpen(false);
-
-          }}
-          className="text-xs text-red-500 text-center w-full border border-red-200  my-2 p-1 rounded-md"
-        >
-          Complete your profile
-        </button>
+        <div className="flex gap-2 py-2">
+          {user?.userData?.labels?.map((label, index) => (
+            <span className="text-[10px] bg-blue-100 p-1 rounded-full px-5">
+              {label}
+            </span>
+          ))}
+        </div>
       </div>
       <Link
-        href="/orders"
+        href="/UserProfiles"
         className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"
       >
-        <Package className="h-4 w-4" />
-        <span>Orders</span>
+        <User2 className="h-4 w-4" />
+        <span>Profile</span>
       </Link>
       <Link
-        href="/settings"
+        href="/Event/MyEvents"
         className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"
       >
-        <Settings className="h-4 w-4" />
-        <span>Settings</span>
+        <Calendar1 className="h-4 w-4" />
+        <span>My Events</span>
       </Link>
       <button
         onClick={() => {

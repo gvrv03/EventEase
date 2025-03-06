@@ -1,15 +1,10 @@
 "use client";
 import { createContext, useState, useEffect, useContext } from "react";
 import {
-  AppwriteDatabase,
-  GDGCDatabase,
-  ID,
   UserAccount,
-  UsersCollection,
 } from "@/config/appwrite";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { AddDataToCollection, GetSingleDocument } from "@/Services/Appwrite";
 
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {

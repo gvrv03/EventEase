@@ -4,8 +4,9 @@ import { getUsersEvents } from "@/Services/Appwrite";
 import moment from "moment/moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
+import { useRouter } from "next/navigation";
 const EventCard = ({ event }) => {
+  const router = useRouter();
   return (
     <div className="bg-white rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow">
       {/* Event Header */}
@@ -72,7 +73,12 @@ const EventCard = ({ event }) => {
         </div>
       </div>
 
-      <button className="mt-4 text-sm w-full bg-blue-500 text-white px-4 py-2 rounded-md">
+      <button
+        onClick={() => {
+          router.push(`/Event/Customize/${event.$id}`);
+        }}
+        className="mt-4 text-sm w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+      >
         View Detail
       </button>
     </div>
@@ -103,7 +109,7 @@ const MyEventsAll = () => {
   if (loading) {
     return (
       <div className=" mx-auto p-2">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
             20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,

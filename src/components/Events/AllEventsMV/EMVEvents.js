@@ -102,8 +102,8 @@ const EMVEvents = () => {
 
   if (loading) {
     return (
-      <div className=" mx-auto p-2">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className=" mx-auto py-2">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
             20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
@@ -168,8 +168,8 @@ const EMVEvents = () => {
   }
 
   return (
-    <div className=" mx-auto p-2">
-      <div className="flex justify-between items-center mb-6">
+    <div className=" mx-auto ">
+      <div className="flex justify-between items-center pb-2">
         <h1 className="text-2xl font-bold">Events Enquiry</h1>
       </div>
       {events.length === 0 ? (
