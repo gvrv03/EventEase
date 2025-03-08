@@ -26,14 +26,28 @@ const AIEventCreation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 w-full p-2 flex items-center justify-center">
-      <div className="w-full flex items-center md:max-w-[600px] rounded-full p-1 px-2 border border-gray-200 bg-white">
-        <Sparkles className="text-gray-400" size={20} />
-        <input
-          placeholder="Create your event with AI (Describe Here)"
-          className=" outline-none p-2  w-full "
-          type="text"
-        />
+    <div className="w-full p-1 bg-gradient-to-t from-white via-white to-transparent mt-4">
+      <div className="max-w-[800px] mx-auto">
+        <form onSubmit={sendMessage} className="relative group">
+          <div className="w-full flex items-center gap-2 rounded-xl p-1 px-7 border-2 border-gray-200 bg-white shadow-lg hover:border-blue-400 transition-all duration-300 focus-within:border-blue-500 focus-within:shadow-blue-100">
+            <Sparkles className="text-blue-500" size={22} />
+            <input
+              placeholder="Describe your event idea..."
+              className="outline-none p-3 w-full text-gray-700 placeholder-gray-400"
+              type="text"
+            />
+            <button
+              type="submit"
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+            >
+              <Brain size={18} />
+              <span>Generate</span>
+            </button>
+          </div>
+        </form>
+        <p className="text-xs text-gray-400 text-center mt-2">
+          Powered by AI - Create amazing events with a simple description
+        </p>
       </div>
     </div>
   );

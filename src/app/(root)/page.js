@@ -14,7 +14,6 @@ const HomePage = () => {
     <div className="flex pb-20 flex-col gap-5">
       <Banner />
       <Landing />
-
       <Features />
       <OurEvents />
       <JoinEMV />
