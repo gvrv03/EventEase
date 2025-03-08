@@ -17,28 +17,14 @@ const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Architecture",
-      url: "#",
       items: [
         {
-          title: "Accessibility",
-          url: "#",
+          title: "All Users",
+          url: "/Admin/AllUsers",
         },
         {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
+          title: "Business Details",
+          url: "/Admin/BusinessVerification",
         },
       ],
     },
@@ -51,8 +37,7 @@ export function AppSidebar({ ...props }) {
       <SidebarContent>
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
-            <SidebarGroupLabel className="text-lg font-semibold" >{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent className="ml-2" >
+            <SidebarGroupContent className="ml-2">
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>

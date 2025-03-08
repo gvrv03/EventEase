@@ -79,38 +79,47 @@ export const sendOTP = async (phoneNo) => {
   return session;
 };
 
-export const verifyOTP = async (user, otp) => {
-  await UserAccount.createSession(user.userId, otp);
+export const SignInUser = async (email, password) => {
+  await UserAccount.createEmailPasswordSession(email, password);
   const accountDetails = await UserAccount.get();
   const checkUser = await ListCollectionData(UsersCollection, [
-    Query.equal("$id", user.userId),
+    Query.equal("$id", accountDetails.$id),
   ]);
 
   if (!checkUser?.documents?.length > 0) {
     await AppwriteDatabase.createDocument(
       process.env.NEXT_PUBLIC_DATABASEID,
       UsersCollection,
-      user.userId,
+      accountDetails.$id,
       { Name: accountDetails?.name ? accountDetails?.name : "User" },
       [
-        Permission.update(Role.user(user.userId)),
-        Permission.delete(Role.user(user.userId)),
-        Permission.read(Role.user(user.userId)),
+        Permission.update(Role.user(accountDetails.$id)),
+        Permission.delete(Role.user(accountDetails.$id)),
+        Permission.read(Role.user(accountDetails.$id)),
       ]
     );
   } else {
-    await UpdateCollectionData(UsersCollection, user.userId, {
+    await UpdateCollectionData(UsersCollection, accountDetails.$id, {
       Name: accountDetails?.name ? accountDetails?.name : "User",
     });
   }
 };
 
-export const updateUser = async (userName) => {
+export const SignUpUser = async (email, password, name) => {
+  await UserAccount.create(ID.unique(), email, password, name);
+  await SignInUser(email, password);
+};
+
+export const updateUser = async (userName, userEmail, phone, password) => {
   await UserAccount.updateName(userName);
+  userEmail && (await UserAccount.updateEmail(userEmail, password));
+  phone && (await UserAccount.updatePhone("+91" + phone, password));
   const accountDetails = await UserAccount.get();
-  await UpdateCollectionData(UsersCollection, accountDetails?.$id, {
-    Name: accountDetails?.name ? accountDetails?.name : "User",
-  });
+  if (accountDetails?.$id) {
+    await UpdateCollectionData(UsersCollection, accountDetails.$id, {
+      Name: accountDetails.name || "User",
+    });
+  }
 };
 
 export const getBusinessDetails = async () => {

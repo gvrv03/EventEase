@@ -32,7 +32,7 @@ const BusinessVerification = () => {
   }, []);
 
   const [approvedLoadingId, setApprovedLoadingId] = useState(null);
-  const ApprovedBusiness = async (userID,docID, Role) => {
+  const ApprovedBusiness = async (userID, docID, Role) => {
     try {
       setApprovedLoadingId(docID); // Set loading state for the specific business
       await UpdateCollectionData(BusinessDetailCollection, docID, {
@@ -116,20 +116,33 @@ const BusinessVerification = () => {
               <Button className="text-xs p-1 font-semibold px-5">
                 View Profile
               </Button>
-              <Button
-                onClick={() => ApprovedBusiness(business?.usersDetails?.$id,business.$id, business.Role)}
-                disabled={business.Status || approvedLoadingId === business.$id}
-                className="text-xs p-1 disabled:bg-blue-300 font-semibold px-5"
-              >
-                {approvedLoadingId === business.$id
-                  ? "Approving..."
-                  : "Approve"}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() =>
+                    ApprovedBusiness(
+                      business?.usersDetails?.$id,
+                      business.$id,
+                      business.Role
+                    )
+                  }
+                  disabled={
+                    business.Status || approvedLoadingId === business.$id
+                  }
+                  className="text-xs p-1 disabled:bg-blue-300 font-semibold px-5"
+                >
+                  {approvedLoadingId === business.$id
+                    ? "Approving..."
+                    : "Approve"}
+                </Button>
+                {!business.Status && (
+                  <Button className="text-xs p-1 bg-red-700  font-semibold px-5">
+                    Reject
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         ))}
-        
-        
       </div>
     </div>
   );

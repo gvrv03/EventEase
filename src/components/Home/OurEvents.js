@@ -9,7 +9,7 @@ const OurEvents = () => {
     const router = useRouter()
     
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mx-auto py-8">
             {/* Header Section with gradient background */}
             <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 p-8 mb-8">
                 <div className="relative z-10">

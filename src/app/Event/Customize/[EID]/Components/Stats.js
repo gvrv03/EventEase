@@ -25,7 +25,8 @@ const Stats = () => {
       <div className="flex justify-between items-center pb-4">
         <h1 className="text-2xl font-bold text-gray-800">Event Stats</h1>
         <button className="text-sm flex items-center gap-2 text-gray-600">
-          <RefreshCcw size={15} />Refresh
+          <RefreshCcw size={15} />
+          Refresh
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -40,6 +41,11 @@ const Stats = () => {
             </h2>
             <div className="text-2xl font-bold text-gray-800">
               {stat.amount}
+              {stat.title === "Remaining Amount" && (
+                <div className="text-sm bg-blue-500 text-white px-10 p-1 text-center rounded-md w-full">
+                  Pay Now
+                </div>
+              )}
             </div>
           </div>
         ))}

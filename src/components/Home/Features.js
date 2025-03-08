@@ -3,7 +3,7 @@ import React from "react";
 
 const Features = () => {
   return (
-    <section className="py-1 px-4 max-w-7xl mx-auto">
+    <section className="py-1 mx-auto">
       <h2 className="mb-16 text-center font-bold tracking-tight text-2xl md:text-4xl bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
         Everything You Need for Successful Events
       </h2>

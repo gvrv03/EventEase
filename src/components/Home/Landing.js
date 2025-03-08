@@ -27,7 +27,7 @@ const CelebrationsSection = () => {
   ];
 
   return (
-    <section className="flex flex-col gap-8 py-12 px-4 max-w-6xl mx-auto">
+    <section className="flex flex-col gap-8 py-12   mx-auto">
       <div className="text-center space-y-3">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-800">
           What are you celebrating?

@@ -47,7 +47,7 @@ const EventDetails = () => {
       <div className="border flex-col w-full md:w-fit rounded-lg text-gray-800 font-medium text-lg flex p-2 items-center gap-2">
         <div className="flex items-center justify-start gap-2">
           <User className="w-4 h-4 text-gray-600" />
-          <p className=" text-sm">Vikrant Borkar</p>
+          <p className=" text-sm">{eventSingle?.EMVDetails?.name}</p>
         </div>
         <Link
           href={`/UserProfiles/${eventSingle?.EMVDetails?.$id}`}

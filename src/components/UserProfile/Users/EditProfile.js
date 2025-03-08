@@ -14,11 +14,14 @@ const EditProfile = () => {
   const { user, checkUserStatus } = useAuth();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setloading] = useState(false);
+  const [password, setPassword] = useState("");
   useEffect(() => {
     if (user?.userData) {
       setName(user.userData.name);
       setPhone(user.userData.phone);
+      setEmail(user.userData.email);
     }
   }, [user]);
 
@@ -26,12 +29,16 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       setloading(true);
-      await updateUser(name);
+      await updateUser(
+        name,
+        user.userData.email != email ? email : "",
+        user.userData?.phone != phone ? phone : "",
+        password
+      );
       await checkUserStatus();
-      toast.success("User Updated");
+      toast.success("User Updated Successfully");
     } catch (error) {
-      console.error(error);
-      alert("Failed to update profile");
+      toast.error(error?.message);
     } finally {
       setloading(false);
     }
@@ -54,12 +61,38 @@ const EditProfile = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium">Phone No.</label>
+              <label className="block text-sm font-medium">Email</label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">
+                Phone No.(+91)
+              </label>
               <Input
                 className="disabled:bg-gray-200"
                 value={parseInt(phone)}
-                disabled={true}
                 type="number"
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">
+                Enter Password
+              </label>
+              <Input
+                className="disabled:bg-gray-200"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Enter Password to Update"
                 required
               />
             </div>

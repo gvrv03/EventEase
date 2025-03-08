@@ -70,7 +70,7 @@ const PhoneAuth = () => {
           {!otpSent ? (
             <>
               <div className=" w-full">
-                <h3 className="text-left font-semibold text-xl pb-2">
+                <h3 className="text-left font-semibold text-xl ">
                   Continue with phone
                 </h3>
               </div>

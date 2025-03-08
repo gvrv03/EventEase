@@ -12,8 +12,9 @@ import {
   Package,
   User2,
   Calendar1,
-  User2Icon,
   Users2,
+  BadgeCheck,
+  Badge,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -36,15 +37,25 @@ const menuItems = [
 
 export default function Navbar() {
   const router = useRouter();
-  const { user } = useAuth();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  console.log(user);
+  const { user, logoutUser } = useAuth();
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isEMVDashboardOpen, setIsEMVDashboardOpen] = useState(false);
+  const userDropdownRef = useRef(null);
+  const emvDashboardRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setIsUserDropdownOpen(false);
+      }
+      if (
+        emvDashboardRef.current &&
+        !emvDashboardRef.current.contains(event.target)
+      ) {
+        setIsEMVDashboardOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -83,7 +94,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block  text-sm text-muted-foreground transition-colors hover:text-primary"
+                  className="block text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   {item.title}
                 </Link>
@@ -113,50 +124,75 @@ export default function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="flex gap-2 w-full px-2"
+            className="hidden md:flex gap-2 w-full px-2"
             onClick={() => router.push("/UserProfiles/EMV")}
           >
-            <Users2 className="" />
+            <Users2 />
             <p className="md:flex hidden">All Event Managers/Vendors</p>
           </Button>
-          <div className="relative" ref={dropdownRef}>
+
+          <div className="hidden md:block relative" ref={emvDashboardRef}>
             <Button
-              onClick={() => {
-                user.isLogin
-                  ? setIsDropdownOpen(!isDropdownOpen)
-                  : router.push("/Auth");
-              }}
+              onClick={() => setIsEMVDashboardOpen(!isEMVDashboardOpen)}
               variant="ghost"
               size="icon"
               className="flex gap-2 w-full px-2"
             >
-              <User className="" />
+              <Badge />
+              <p className="md:flex hidden">Dashboard</p>
+            </Button>
+            {isEMVDashboardOpen && <EMVDashboard />}
+          </div>
+
+          <div className="relative" ref={userDropdownRef}>
+            <Button
+              onClick={() =>
+                user?.isLogin
+                  ? setIsUserDropdownOpen(!isUserDropdownOpen)
+                  : router.push("/Auth")
+              }
+              variant="ghost"
+              size="icon"
+              className="flex gap-2 w-full px-2"
+            >
+              <User />
               <p className="md:flex hidden">Profile</p>
             </Button>
-            {isDropdownOpen && (
-              <UserDropdown setIsDropdownOpen={setIsDropdownOpen} />
+            {isUserDropdownOpen && (
+              <UserDropdown setIsDropdownOpen={setIsUserDropdownOpen} />
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="flex gap-2 w-full px-2"
-          >
-            <Heart className="" />
-            <p className="md:flex hidden">Wishlist</p>
-          </Button>
         </div>
       </div>
     </header>
   );
 }
 
+const EMVDashboard = () => {
+  return (
+    <div className="absolute right-0 mt-3 min-w-52 bg-white border border-gray-200 shadow-md rounded-md p-2 z-50">
+      <Link
+        href="/dashboard"
+        className="block p-2 text-sm hover:bg-gray-100 rounded-md"
+      >
+        Dashboard Home
+      </Link>
+      <Link
+        href="/dashboard/EventEnquiry"
+        className="block p-2 text-sm hover:bg-gray-100 rounded-md"
+      >
+        Dashboard Enquiry
+      </Link>
+    </div>
+  );
+};
+
 const UserDropdown = ({ setIsDropdownOpen }) => {
   const { logoutUser, user } = useAuth();
   const router = useRouter();
   return (
     <div className="absolute right-0 mt-3 min-w-52 bg-white border border-gray-200 shadow-md rounded-md p-2 z-50">
-      <div className=" border-b">
+      <div className=" pb-3 border-b">
         <div>
           Hello{" "}
           <span className="text-blue-500 font-semibold">
@@ -165,7 +201,10 @@ const UserDropdown = ({ setIsDropdownOpen }) => {
         </div>
         <div className="flex gap-2 py-2">
           {user?.userData?.labels?.map((label, index) => (
-            <span className="text-[10px] bg-blue-100 p-1 rounded-full px-5">
+            <span
+              key={index}
+              className="text-[10px] bg-blue-100 p-1 rounded-full px-5"
+            >
               {label}
             </span>
           ))}
@@ -178,6 +217,16 @@ const UserDropdown = ({ setIsDropdownOpen }) => {
         <User2 className="h-4 w-4" />
         <span>Profile</span>
       </Link>
+      {user?.userData?.labels?.includes("admin") && (
+        <Link
+          href="/Admin"
+          className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"
+        >
+          <BadgeCheck className="h-4 w-4" />
+          <span>Admin Dashboard</span>
+        </Link>
+      )}
+
       <Link
         href="/Event/MyEvents"
         className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"

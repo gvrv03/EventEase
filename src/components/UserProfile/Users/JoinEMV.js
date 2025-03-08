@@ -19,8 +19,8 @@ const JoinEMV = () => {
   const [showBusinessForm, setShowBusinessForm] = useState(false);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-15">
-      <div className="p-6 bg-white border border-blue-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="w-full flex-col gap-2 flex md:max-w-8xl mx-auto ">
+      <div className="p-6  bg-white border border-blue-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
         <div className="text-center space-y-4">
           <h3 className="text-xl font-semibold text-gray-800">
             Join as{" "}
@@ -96,8 +96,8 @@ const SubmitBusinessProof = () => {
   };
 
   return (
-    <div className="mt-6 p-8 border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-300">
-      <div className="max-w-4xl mx-auto">
+    <div className=" p-5 border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-300">
+      <div className=" mx-auto">
         <h4 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Business Details
         </h4>
