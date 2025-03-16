@@ -29,12 +29,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/Context/AuthContext";
 
-const menuItems = [
-  { title: "Profile", href: "/UserProfiles" },
-  { title: "My Events", href: "/Event/MyEvents" },
-  { title: "All Event Managers/Vendors", href: "/UserProfiles/EMV" },
-];
-
 export default function Navbar() {
   const router = useRouter();
   const { user, logoutUser } = useAuth();
@@ -42,6 +36,20 @@ export default function Navbar() {
   const [isEMVDashboardOpen, setIsEMVDashboardOpen] = useState(false);
   const userDropdownRef = useRef(null);
   const emvDashboardRef = useRef(null);
+
+  const menuItems = [
+    { title: "Profile", href: "/UserProfiles" },
+    { title: "My Events", href: "/Event/MyEvents" },
+    { title: "All Event Managers/Vendors", href: "/UserProfiles/EMV" },
+    (user?.isEventManager || user?.isVendor) && {
+      title: "Dashboard",
+      href: "/dashboard",
+      subMenu: [
+        { title: "Dashboard Home", href: "/dashboard" },
+        { title: "Dashboard Enquiry", href: "/dashboard/EventEnquiry" },
+      ],
+    },
+  ];
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -90,14 +98,28 @@ export default function Navbar() {
               </div>
             </div>
             <nav className="mt-4 flex flex-col space-y-2">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {item.title}
-                </Link>
+            {menuItems.map((item, index) => (
+                <div key={index} className="relative">
+                  <Link
+                    href={item.href}
+                    className="block text-sm text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    {item.title}
+                  </Link>
+                  {item.subMenu && (
+                    <div className="ml-4 mt-1 flex flex-col space-y-1">
+                      {item.subMenu.map((subItem, subIndex) => (
+                        <Link
+                          key={subIndex}
+                          href={subItem.href}
+                          className="block text-xs text-muted-foreground transition-colors hover:text-primary"
+                        >
+                          {subItem.title}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </nav>
           </SheetContent>
