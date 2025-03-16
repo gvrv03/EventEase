@@ -6,6 +6,7 @@ import EventDetails from "./Components/EventDetails";
 import EventServices from "./Components/EventServices";
 import { useEvents } from "@/Context/EventContext";
 import TransactionRecords from "./Components/TransactionRecords";
+import { EventChatBot } from "./Components/ChatBot";
 
 const EventCustomize = ({ params }) => {
   const EventID = React.use(params).EID;
@@ -56,6 +57,7 @@ const EventCustomize = ({ params }) => {
           <EventServices />
         )}
       </div>
+      <EventChatBot/>
     </div>
   );
 };
