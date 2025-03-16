@@ -1,28 +1,69 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Stats from "./Components/Stats";
 import EventDetails from "./Components/EventDetails";
 import EventServices from "./Components/EventServices";
 import { useEvents } from "@/Context/EventContext";
+import TransactionRecords from "./Components/TransactionRecords";
 
 const EventCustomize = ({ params }) => {
   const EventID = React.use(params).EID;
   const { loadingSingle, errorSingle, getEventDetails } = useEvents();
+  const [loading, setLoading] = useState(true);
+
+  const refreshData = () => {
+    getEventDetails(EventID);
+  };
 
   useEffect(() => {
-    EventID && getEventDetails(EventID);
-  }, [EventID, getEventDetails]);
+    if (EventID) {
+      getEventDetails(EventID);
+      setTimeout(() => setLoading(false), 1500); // Simulating API delay
+    }
+  }, [EventID]);
 
   return (
-    <div className="flex md:flex-row gap-2 flex-col justify-between ">
-      <EventDetails />
+    <div className="flex md:flex-row gap-2 flex-col justify-between">
+      <div className="flex flex-col gap-2 w-full">
+        {loading ? (
+          <SkeletonLoader className="h-[250px] w-full" />
+        ) : (
+          <EventDetails />
+        )}
+        {loading ? (
+          <SkeletonLoader className="h-[200px] w-full" />
+        ) : (
+          <TransactionRecords />
+        )}
+      </div>
+
       <div className="flex w-full flex-col gap-2">
-        <Stats />
-        <EventServices />
+        {loading ? (
+          <SkeletonLoader className="h-[120px] w-full" />
+        ) : (
+          <Stats refreshData={refreshData} />
+        )}
+
+        {loading ? (
+          <div className="space-y-2">
+            <SkeletonLoader className="h-[60px] w-full" />
+            <SkeletonLoader className="h-[60px] w-full" />
+            <SkeletonLoader className="h-[60px] w-full" />
+            <SkeletonLoader className="h-[60px] w-full" />
+          </div>
+        ) : (
+          <EventServices />
+        )}
       </div>
     </div>
   );
 };
 
 export default EventCustomize;
+
+
+const SkeletonLoader = ({ className }) => {
+  return <div className={`animate-pulse bg-gray-300 rounded-md ${className}`}></div>;
+};
+

@@ -8,16 +8,19 @@ import {
   X,
 } from "lucide-react";
 import { useEvents } from "@/Context/EventContext";
-import { EventCreationCollection } from "@/config/appwrite";
-import { UpdateCollectionData } from "@/Services/Appwrite";
+import {
+  EventCreationCollection,
+  TransactionCollection,
+} from "@/config/appwrite";
+import { AddDataToCollection, UpdateCollectionData } from "@/Services/Appwrite";
 import toast from "react-hot-toast";
 import { useAuth } from "@/Context/AuthContext";
-const Stats = () => {
+const Stats = ({ refreshData }) => {
   const { eventSingle } = useEvents();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [loading, setLoading] = useState(false);
-const {user} = useAuth()
+  const { user } = useAuth();
   const totalBudget =
     eventSingle?.Budget?.reduce((acc, curr) => acc + curr, 0) || 0;
   const amountPaid = eventSingle?.AmountPaid || 0;
@@ -30,6 +33,16 @@ const {user} = useAuth()
         await UpdateCollectionData(EventCreationCollection, eventSingle?.$id, {
           AmountPaid: eventSingle?.AmountPaid + parseInt(paymentAmount),
         });
+        await AddDataToCollection(
+          TransactionCollection,
+          {
+            Amount: parseInt(paymentAmount),
+            usersDetails: user?.userData?.$id,
+            eventCreation: eventSingle?.$id,
+          },
+          user?.userData?.$id
+        );
+        refreshData();
         setShowPaymentModal(false);
         setPaymentAmount("");
         toast.success(`Payment of ₹${paymentAmount} successful!`);
@@ -42,7 +55,6 @@ const {user} = useAuth()
       toast.error("Invalid payment amount.");
     }
   };
-  
 
   const isEventUser = eventSingle?.userDetails?.$id === user?.userData?.$id;
 
@@ -86,14 +98,16 @@ const {user} = useAuth()
             <div className="text-2xl font-bold text-gray-800">
               {stat.amount}
             </div>
-            {stat.title === "Remaining Amount" && remainingAmount > 0 && isEventUser && (
-              <button
-                className="text-sm bg-blue-500 text-white px-10 p-1 text-center rounded-md w-full mt-2"
-                onClick={() => setShowPaymentModal(true)}
-              >
-                Pay Now
-              </button>
-            )}
+            {stat.title === "Remaining Amount" &&
+              remainingAmount > 0 &&
+              isEventUser && (
+                <button
+                  className="text-sm bg-blue-500 text-white px-10 p-1 text-center rounded-md w-full mt-2"
+                  onClick={() => setShowPaymentModal(true)}
+                >
+                  Pay Now
+                </button>
+              )}
           </div>
         ))}
       </div>
