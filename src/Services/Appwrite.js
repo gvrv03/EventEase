@@ -24,17 +24,13 @@ export const ListCollectionData = async (collectionID, queries) => {
 };
 
 export const UpdateCollectionData = async (collectionID, docID, data) => {
-  try {
-    const res = await AppwriteDatabase.updateDocument(
-      process.env.NEXT_PUBLIC_DATABASEID,
-      collectionID,
-      docID,
-      data
-    );
-    return res;
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  const res = await AppwriteDatabase.updateDocument(
+    process.env.NEXT_PUBLIC_DATABASEID,
+    collectionID,
+    docID,
+    data
+  );
+  return res;
 };
 
 export const AddDataToCollection = async (collectionID, data, userID) => {

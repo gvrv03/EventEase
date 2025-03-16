@@ -3,9 +3,11 @@ import { useAuth } from "@/Context/AuthContext";
 import { getEMVEvents, getUsersEvents } from "@/Services/Appwrite";
 import moment from "moment/moment";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const EventCard = ({ event }) => {
+  const router = useRouter();
   return (
     <div className="bg-white rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow">
       {/* Event Header */}
@@ -72,7 +74,10 @@ const EventCard = ({ event }) => {
         </div>
       </div>
 
-      <button className="mt-4 text-sm w-full bg-blue-500 text-white px-4 py-2 rounded-md">
+      <button
+        onClick={() => router.push(`/Event/Customize/${event.$id}`)}
+        className="mt-4 text-sm w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+      >
         View Detail
       </button>
     </div>

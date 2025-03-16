@@ -131,18 +131,20 @@ export default function Navbar() {
             <p className="md:flex hidden">All Event Managers/Vendors</p>
           </Button>
 
-          <div className="hidden md:block relative" ref={emvDashboardRef}>
-            <Button
-              onClick={() => setIsEMVDashboardOpen(!isEMVDashboardOpen)}
-              variant="ghost"
-              size="icon"
-              className="flex gap-2 w-full px-2"
-            >
-              <Badge />
-              <p className="md:flex hidden">Dashboard</p>
-            </Button>
-            {isEMVDashboardOpen && <EMVDashboard />}
-          </div>
+          {(user.isAdmin || user.isEventManager || user?.isVendor) && (
+            <div className="hidden md:block relative" ref={emvDashboardRef}>
+              <Button
+                onClick={() => setIsEMVDashboardOpen(!isEMVDashboardOpen)}
+                variant="ghost"
+                size="icon"
+                className="flex gap-2 w-full px-2"
+              >
+                <Badge />
+                <p className="md:flex hidden">Dashboard</p>
+              </Button>
+              {isEMVDashboardOpen && <EMVDashboard />}
+            </div>
+          )}
 
           <div className="relative" ref={userDropdownRef}>
             <Button
