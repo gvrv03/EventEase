@@ -6,10 +6,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const EventCard = ({ event }) => {
+export const EventCard = ({ event }) => {
   const router = useRouter();
   return (
-    <div className="bg-white rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow">
+    <div className="bg-white flex-col flex  justify-between rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow">
       {/* Event Header */}
       <div className="flex justify-between items-start mb-4">
         <div>

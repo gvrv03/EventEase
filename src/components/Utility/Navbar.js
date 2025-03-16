@@ -98,7 +98,7 @@ export default function Navbar() {
               </div>
             </div>
             <nav className="mt-4 flex flex-col space-y-2">
-            {menuItems.map((item, index) => (
+              {menuItems.map((item, index) => (
                 <div key={index} className="relative">
                   <Link
                     href={item.href}
