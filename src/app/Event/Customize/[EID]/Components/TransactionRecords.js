@@ -14,6 +14,7 @@ const TransactionRecords = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+console.log(eventSingle);
 
   useEffect(() => {
     if (!user?.userData?.$id || !eventSingle?.$id) return;
@@ -24,8 +25,8 @@ const TransactionRecords = () => {
       
       try {
         const response = await ListCollectionData(TransactionCollection, [
-          Query.equal("usersDetails", user.userData.$id),
-          Query.equal("eventCreation", eventSingle.$id),
+          Query.equal("usersDetails", eventSingle?.userDetails?.$id),
+          Query.equal("eventCreation", eventSingle?.$id),
           Query.orderDesc("$createdAt"),
         ]);
 
