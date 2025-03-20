@@ -9,12 +9,16 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [totalAmount, settotalAmount] = useState();
 
   const getEvents = async () => {
     try {
       setLoading(true);
       const response = await getEMVEvents();
       setEvents(response);
+      // Calculate the total amount
+      const total = response?.reduce((acc, item) => acc + item.AmountPaid, 0);
+      settotalAmount(total); // Update the state with the total amount
     } catch (error) {
       setError(error?.message);
     } finally {
@@ -33,21 +37,21 @@ const Dashboard = () => {
       icon: <Users className="w-6 h-6 text-blue-500" />,
     },
     {
-      title: "Total Income",
-      value: "52,340",
-      icon: <IndianRupee className="w-6 h-6 text-green-500" />,
-    },
-    {
       title: "Total Events",
       value: 10,
       icon: <Calendar className="w-6 h-6 text-purple-500" />,
     },
-  ];
+    {
+      title: "Total Balance",
+      value: totalAmount,
+      icon: <IndianRupee className="w-6 h-6 text-green-500" />,
+    },
 
-  const transactions = [
-    { id: 1, vendor: "John Doe", amount: "2,500", date: "Mar 10, 2025" },
-    { id: 2, vendor: "Jane Smith", amount: "1,800", date: "Mar 12, 2025" },
-    { id: 3, vendor: "Michael Lee", amount: "3,200", date: "Mar 14, 2025" },
+    {
+      title: "Balance (5% Platform Fee) ",
+      value: totalAmount - (5 / 100) * totalAmount,
+      icon: <IndianRupee className="w-6 h-6 text-green-500" />,
+    },
   ];
 
   return (
@@ -57,7 +61,7 @@ const Dashboard = () => {
       </h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
           <div
             key={index}
@@ -71,6 +75,10 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+      <p className="text-sm py-2">
+        The amount will be automatically credited to your bank account within
+        5-7 working days.
+      </p>
 
       {/* Recent Transactions */}
       <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
@@ -93,9 +101,7 @@ const Dashboard = () => {
                 <td className="py-2 text-green-600">
                   {event?.Budget?.reduce((acc, curr) => acc + curr, 0)}
                 </td>
-                <td className="py-2 text-green-600">
-                  {event?.AmountPaid}
-                </td>
+                <td className="py-2 text-green-600">{event?.AmountPaid}</td>
                 <td className="py-2 text-gray-500">
                   {moment(event.eventDate).format("DD-MM-YYYY")}
                 </td>
