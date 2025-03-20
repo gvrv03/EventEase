@@ -45,8 +45,8 @@ export default function Navbar() {
       title: "Dashboard",
       href: "/dashboard",
       subMenu: [
-        { title: "Dashboard Home", href: "/dashboard" },
-        { title: "Dashboard Enquiry", href: "/dashboard/EventEnquiry" },
+        { title: "Home", href: "/dashboard" },
+        { title: "Enquiry", href: "/dashboard/EventEnquiry" },
       ],
     },
   ];
@@ -101,7 +101,7 @@ export default function Navbar() {
               {menuItems.map((item, index) => (
                 <div key={index} className="relative">
                   <Link
-                    href={item.href}
+                    href={!item.subMenu ? item.href : "/"}
                     className="block text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
                     {item.title}

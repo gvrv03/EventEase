@@ -13,7 +13,9 @@ const EventDetails = () => {
   const { user } = useAuth();
 
   if (!eventSingle) {
-    return <p className="text-center text-gray-500">Loading event details...</p>;
+    return (
+      <p className="text-center text-gray-500">Loading event details...</p>
+    );
   }
 
   const {
@@ -53,8 +55,8 @@ const EventDetails = () => {
     <div className="bg-white p-4 rounded-lg shadow-md w-full">
       {/* Event Image */}
       <img
-        src={ImageUrl || "/default-image.png"}
-        alt="Event"
+        src="https://i.sstatic.net/y9DpT.jpg"
+        alt="EventImage"
         className="w-full md:h-96 rounded-lg object-cover"
       />
 
@@ -98,7 +100,9 @@ const EventDetails = () => {
       {/* Services Required */}
       {Services?.length > 0 && (
         <>
-          <h3 className="text-gray-800 font-semibold mt-4">Services Required:</h3>
+          <h3 className="text-gray-800 font-semibold mt-4">
+            Services Required:
+          </h3>
           <div className="flex flex-wrap gap-2 mt-2">
             {Services.map((service, index) => (
               <span

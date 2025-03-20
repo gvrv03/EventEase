@@ -47,7 +47,19 @@ const EditProfile = () => {
   return (
     <div className="flex items-center justify-center ">
       <Card className="p-2 rounded-md flex-col flex gap-2 w-full ">
-        <h3 className="font-semibold text-lg">Edit Profile</h3>
+        <div className="font-semibold flex justify-between text-lg">
+          Edit Profile
+          {(user?.isEventManger || user?.isVendor) && (
+            <button
+              onClick={() => {
+                router.push("/UserProfiles/" + user?.userData?.$id);
+              }}
+              className="p-1 px-5 font-normal text-sm bg-blue-500 text-white rounded-md"
+            >
+              View Business Profile
+            </button>
+          )}
+        </div>
         <CardContent className="p-0">
           <form onSubmit={updateProfile} className="space-y-2">
             <div>
