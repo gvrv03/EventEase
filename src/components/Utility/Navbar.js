@@ -199,13 +199,13 @@ const EMVDashboard = () => {
         href="/dashboard"
         className="block p-2 text-sm hover:bg-gray-100 rounded-md"
       >
-        Dashboard Home
+        Home
       </Link>
       <Link
         href="/dashboard/EventEnquiry"
         className="block p-2 text-sm hover:bg-gray-100 rounded-md"
       >
-        Dashboard Enquiry
+        Enquiry
       </Link>
     </div>
   );
