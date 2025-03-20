@@ -15,6 +15,7 @@ import {
   Users2,
   BadgeCheck,
   Badge,
+  LayoutDashboard,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -41,14 +42,14 @@ export default function Navbar() {
     { title: "Profile", href: "/UserProfiles" },
     { title: "My Events", href: "/Event/MyEvents" },
     { title: "All Event Managers/Vendors", href: "/UserProfiles/EMV" },
-    (user?.isEventManager || user?.isVendor) && {
-      title: "Dashboard",
-      href: "/dashboard",
-      subMenu: [
-        { title: "Home", href: "/dashboard" },
-        { title: "Enquiry", href: "/dashboard/EventEnquiry" },
-      ],
-    },
+    // (user?.isEventManager || user?.isVendor) && {
+    //   title: "Dashboard",
+    //   href: "/dashboard",
+    //   subMenu: [
+    //     { title: "Home", href: "/dashboard" },
+    //     { title: "Enquiry", href: "/dashboard/EventEnquiry" },
+    //   ],
+    // },
   ];
 
   useEffect(() => {
@@ -101,24 +102,11 @@ export default function Navbar() {
               {menuItems.map((item, index) => (
                 <div key={index} className="relative">
                   <Link
-                    href={!item.subMenu ? item.href : "/"}
+                    href={item.href}
                     className="block text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
                     {item.title}
                   </Link>
-                  {item.subMenu && (
-                    <div className="ml-4 mt-1 flex flex-col space-y-1">
-                      {item.subMenu.map((subItem, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subItem.href}
-                          className="block text-xs text-muted-foreground transition-colors hover:text-primary"
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </nav>
@@ -214,6 +202,7 @@ const EMVDashboard = () => {
 const UserDropdown = ({ setIsDropdownOpen }) => {
   const { logoutUser, user } = useAuth();
   const router = useRouter();
+  const [isDropDownOpen, setisDropDownOpen] = useState();
   return (
     <div className="absolute right-0 mt-3 min-w-52 bg-white border border-gray-200 shadow-md rounded-md p-2 z-50">
       <div className=" pb-3 border-b">
@@ -234,6 +223,22 @@ const UserDropdown = ({ setIsDropdownOpen }) => {
           ))}
         </div>
       </div>
+      <div onClick={()=>{
+        setisDropDownOpen(!isDropDownOpen)
+      }} className="cursor-pointer flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md">
+        <LayoutDashboard className="h-4 w-4" />
+        <p>Dashboard</p>
+      </div>
+      {isDropDownOpen && (
+        <div className="flex mt-2 border   p-2 text-[11px]  flex-col rounded-md">
+          <Link href="/dashboard" className="hover:bg-gray-100 rounded-md px-2 p-1">
+            Home
+          </Link>
+          <Link href="/dashboard/EventEnquiry" className="hover:bg-gray-100 rounded-md px-2 p-1">
+            Enquiry
+          </Link>
+        </div>
+      )}
       <Link
         href="/UserProfiles"
         className="flex items-center space-x-2 p-2 text-sm hover:bg-gray-100 rounded-md"
