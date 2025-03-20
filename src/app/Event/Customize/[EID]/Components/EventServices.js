@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/Context/AuthContext";
 
-const EventServices = () => {
+const EventServices = ({ refreshData }) => {
   const { eventSingle } = useEvents();
   const { user } = useAuth();
   const [arrAmount, setArrAmount] = useState([]);
@@ -39,7 +39,9 @@ const EventServices = () => {
       await UpdateCollectionData(EventCreationCollection, eventSingle?.$id, {
         Budget: updatedPrices,
       });
+
       toast.success("Price updated successfully");
+      refreshData();
     } catch (error) {
       toast.error(error?.message || "Failed to update price");
     } finally {
@@ -70,11 +72,13 @@ const EventServices = () => {
                   ₹{arrAmount[index] || "0"}
                 </span>
               )}
-              {isEMVEditable && (
-                editingIndex === index ? (
+              {isEMVEditable &&
+                (editingIndex === index ? (
                   <button
                     onClick={() => handleSave(index)}
-                    className={`bg-green-500 text-white px-2 py-1 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className={`bg-green-500 text-white px-2 py-1 rounded-md ${
+                      loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     disabled={loading}
                   >
                     {loading ? "Saving..." : "Save"}
@@ -86,8 +90,7 @@ const EventServices = () => {
                   >
                     Edit
                   </button>
-                )
-              )}
+                ))}
             </div>
           </div>
         ))}

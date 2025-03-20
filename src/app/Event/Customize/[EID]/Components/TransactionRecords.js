@@ -14,7 +14,6 @@ const TransactionRecords = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-console.log(eventSingle);
 
   useEffect(() => {
     if (!user?.userData?.$id || !eventSingle?.$id) return;

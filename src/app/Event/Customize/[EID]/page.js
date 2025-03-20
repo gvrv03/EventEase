@@ -7,11 +7,17 @@ import EventServices from "./Components/EventServices";
 import { useEvents } from "@/Context/EventContext";
 import TransactionRecords from "./Components/TransactionRecords";
 import { EventChatBot } from "./Components/ChatBot";
+import { useAuth } from "@/Context/AuthContext";
 
 const EventCustomize = ({ params }) => {
   const EventID = React.use(params).EID;
-  const { loadingSingle, errorSingle, getEventDetails } = useEvents();
+  const { loadingSingle, errorSingle, eventSingle, getEventDetails } =
+    useEvents();
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  const isEventEMV = eventSingle?.EMVDetails?.$id == user?.userData?.$id;
+  const isEventUsers = eventSingle?.userDetails?.$id == user?.userData?.$id;
 
   const refreshData = () => {
     getEventDetails(EventID);
@@ -20,7 +26,7 @@ const EventCustomize = ({ params }) => {
   useEffect(() => {
     if (EventID) {
       getEventDetails(EventID);
-      setTimeout(() => setLoading(false), 1500); // Simulating API delay
+      setTimeout(() => setLoading(false), 1500);
     }
   }, [EventID]);
 
@@ -54,18 +60,18 @@ const EventCustomize = ({ params }) => {
             <SkeletonLoader className="h-[60px] w-full" />
           </div>
         ) : (
-          <EventServices />
+          <EventServices refreshData={refreshData} />
         )}
       </div>
-      <EventChatBot/>
+      {(isEventEMV || isEventUsers) && <EventChatBot />}
     </div>
   );
 };
 
 export default EventCustomize;
 
-
 const SkeletonLoader = ({ className }) => {
-  return <div className={`animate-pulse bg-gray-300 rounded-md ${className}`}></div>;
+  return (
+    <div className={`animate-pulse bg-gray-300 rounded-md ${className}`}></div>
+  );
 };
-
