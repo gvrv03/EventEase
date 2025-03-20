@@ -17,7 +17,6 @@ const TransactionRecords = () => {
 
   useEffect(() => {
     if (!user?.userData?.$id || !eventSingle?.$id) return;
-
     const fetchTransactions = async () => {
       setLoading(true);
       setError(null);

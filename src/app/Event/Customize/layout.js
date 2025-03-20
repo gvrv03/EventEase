@@ -5,7 +5,7 @@ import React from "react";
 
 const AccountLayout = ({ children }) => {
   const { user } = useAuth();
-  return <div>{user?.isLogin ? children : <PleaseLogin/>}</div>;
+  return <div>{children }</div>;
 };
 
 export default AccountLayout;

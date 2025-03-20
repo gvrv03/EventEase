@@ -41,7 +41,7 @@ const EventCustomize = ({ params }) => {
         {loading ? (
           <SkeletonLoader className="h-[200px] w-full" />
         ) : (
-          <TransactionRecords />
+          (isEventEMV || isEventUsers) && <TransactionRecords />
         )}
       </div>
 
