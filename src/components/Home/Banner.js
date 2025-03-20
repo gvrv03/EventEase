@@ -2,12 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const images = [
-  "https://img.ebonow.com/Posters/P1B.webp",
-  "https://img.ebonow.com/Posters/P1C.webp",
-  "https://img.ebonow.com/Posters/P1D.webp",
-  "https://img.ebonow.com/Posters/P1F.webp",
-];
+const images = ["/Banner/banner2.png", "/Banner/banner1.png"];
 
 const Banner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,7 +20,7 @@ const Banner = () => {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
@@ -35,7 +30,7 @@ const Banner = () => {
   };
 
   return (
-    <div className="relative w-auto bg-gradient-to-b from-gray-50 to-white p-5 h-[250px] md:h-[500px] overflow-hidden">
+    <div className="relative w-auto bg-gradient-to-b from-gray-50 to-white p-5 h-[200px] md:h-[500px] overflow-hidden">
       {/* Image Slider */}
       {images.map((image, index) => (
         <img
