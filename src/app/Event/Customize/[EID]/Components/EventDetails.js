@@ -55,7 +55,7 @@ const EventDetails = () => {
     <div className="bg-white p-4 rounded-lg shadow-md w-full">
       {/* Event Image */}
       <img
-        src="https://i.sstatic.net/y9DpT.jpg"
+        src="https://www.themgroup.co.uk/wp-content/uploads/2020/12/landscape-placeholder-e1608289113759.png"
         alt="EventImage"
         className="w-full md:h-96 rounded-lg object-cover"
       />
