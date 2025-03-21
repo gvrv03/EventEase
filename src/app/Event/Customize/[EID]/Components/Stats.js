@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { useEvents } from "@/Context/EventContext";
+import Script from "next/script";
 import {
   EventCreationCollection,
   TransactionCollection,
@@ -26,35 +27,20 @@ const Stats = ({ refreshData }) => {
   const amountPaid = eventSingle?.AmountPaid || 0;
   const remainingAmount = totalBudget - amountPaid;
 
-  const handlePayment = async () => {
-    if (paymentAmount > 0 && paymentAmount <= remainingAmount) {
-      setLoading(true);
-      try {
-        await UpdateCollectionData(EventCreationCollection, eventSingle?.$id, {
-          AmountPaid: eventSingle?.AmountPaid + parseInt(paymentAmount),
-        });
-        await AddDataToCollection(
-          TransactionCollection,
-          {
-            Amount: parseInt(paymentAmount),
-            usersDetails: user?.userData?.$id,
-            eventCreation: eventSingle?.$id,
-          },
-          user?.userData?.$id
-        );
-        refreshData();
-        setShowPaymentModal(false);
-        setPaymentAmount("");
-        toast.success(`Payment of ₹${paymentAmount} successful!`);
-      } catch (error) {
-        toast.error(error.message);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      toast.error("Invalid payment amount.");
-    }
-  };
+  // const handlePayment = async () => {
+  //   if (paymentAmount > 0 && paymentAmount <= remainingAmount) {
+  //     setLoading(true);
+  //     try {
+  //       await createOrder();
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   } else {
+  //     toast.error("Invalid payment amount.");
+  //   }
+  // };
 
   const isEventUser = eventSingle?.userDetails?.$id === user?.userData?.$id;
 
@@ -76,8 +62,78 @@ const Stats = ({ refreshData }) => {
     },
   ];
 
+  const handlePayment = async () => {
+    try {
+      if (paymentAmount > 0 && paymentAmount <= remainingAmount) {
+        setLoading(true);
+
+        const res = await fetch("/api/razorpay/CreateOrder", {
+          method: "POST",
+          body: JSON.stringify({ amount: paymentAmount * 100 }),
+        });
+        const data = await res.json();
+
+        const paymentData = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          order_id: data.id,
+          name: "EventEase",
+          image: "/logo.svg",
+          handler: async function (response) {
+            setLoading(true);
+
+            // verify payment
+            const res = await fetch("/api/razorpay/verifyOrder", {
+              method: "POST",
+              body: JSON.stringify({
+                orderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              }),
+            });
+
+            const data = await res.json();
+
+            await UpdateCollectionData(
+              EventCreationCollection,
+              eventSingle?.$id,
+              {
+                AmountPaid: eventSingle?.AmountPaid + parseInt(paymentAmount),
+              }
+            );
+            await AddDataToCollection(
+              TransactionCollection,
+              {
+                Amount: parseInt(paymentAmount),
+                usersDetails: user?.userData?.$id,
+                eventCreation: eventSingle?.$id,
+              },
+              user?.userData?.$id
+            );
+            refreshData();
+            setShowPaymentModal(false);
+            setPaymentAmount("");
+            toast.success(`Payment of ₹${paymentAmount} successful!`);
+            setLoading(false);
+          },
+        };
+        const payment = new window.Razorpay(paymentData);
+        payment.open();
+      } else {
+        toast.error("Invalid payment amount.");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-white p-3 w-full h-fit rounded-lg shadow-md">
+      <Script
+        type="text/javascript"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
       <div className="flex justify-between items-center pb-4">
         <h1 className="text-2xl font-bold text-gray-800">Event Stats</h1>
         <button className="text-sm flex items-center gap-2 text-gray-600">
