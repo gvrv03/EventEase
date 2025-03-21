@@ -41,11 +41,6 @@ const Dashboard = () => {
       icon: <Users className="w-6 h-6 text-blue-500" />,
     },
     {
-      title: "Total Events",
-      value: 10,
-      icon: <Calendar className="w-6 h-6 text-purple-500" />,
-    },
-    {
       title: "Total Balance",
       value: totalAmount,
       icon: <IndianRupee className="w-6 h-6 text-green-500" />,
