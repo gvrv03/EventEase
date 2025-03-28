@@ -8,6 +8,7 @@ import { useEvents } from "@/Context/EventContext";
 import TransactionRecords from "./Components/TransactionRecords";
 import { EventChatBot } from "./Components/ChatBot";
 import { useAuth } from "@/Context/AuthContext";
+import EventNotification from "./Components/EventNotification";
 
 const EventCustomize = ({ params }) => {
   const EventID = React.use(params).EID;
@@ -61,6 +62,13 @@ const EventCustomize = ({ params }) => {
           </div>
         ) : (
           <EventServices refreshData={refreshData} />
+        )}
+        {loading ? (
+          <SkeletonLoader className="h-[120px] w-full" />
+        ) : (
+          (isEventEMV || isEventUsers) && (
+            <EventNotification refreshData={refreshData} />
+          )
         )}
       </div>
       {(isEventEMV || isEventUsers) && <EventChatBot />}

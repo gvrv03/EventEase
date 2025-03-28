@@ -15,6 +15,9 @@ export const TransactionCollection = process.env.NEXT_PUBLIC_TRANSACTION_ID;
 export const EventCommunicationCollection =
   process.env.NEXT_PUBLIC_EVENT_COMMUNICATION;
 
+export const EventNotificationCollection =
+  process.env.NEXT_PUBLIC_EVENT_NOTIFICATION;
+
 export const UserAccount = new Account(client);
 
 export const AppwriteDatabase = new Databases(client);
