@@ -49,7 +49,7 @@ const EditProfile = () => {
       <Card className="p-2 rounded-md flex-col flex gap-2 w-full ">
         <div className="font-semibold flex justify-between text-lg">
           Edit Profile
-          {(user?.isEventManger || user?.isVendor) && (
+          {(user?.isEventManager || user?.isVendor) && (
             <button
               onClick={() => {
                 router.push("/UserProfiles/" + user?.userData?.$id);
