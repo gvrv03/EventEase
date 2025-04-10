@@ -12,3 +12,5 @@ const AllUsers = () => {
 
 
 export default AllUsers;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
