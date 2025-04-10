@@ -21,9 +21,18 @@ const haversine = (lat1, lon1, lat2, lon2) => {
 const getUserLocation = () => {
   return new Promise((resolve, reject) => {
     if (navigator.geolocation) {
+      console.log(navigator.geolocation);
+
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
+          );
+          const data = await response.json();
+          const city =
+            data.address.city || data.address.town || data.address.village;
           resolve({
+            city: city,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
@@ -45,9 +54,13 @@ const ServiceAvailability = () => {
 
   useEffect(() => {
     const locations = [
-      { latitude: 96.1458, longitude: 95.0882 }, // Example: Nagpur
-      { latitude: 96.155, longitude: 36.095 },
+      { latitude: 21.1458, longitude: 79.0882 }, // Nagpur
+      { latitude: 21.2667, longitude: 78.8667 }, // Wardha (~75 km away)
+      { latitude: 20.95, longitude: 79.3 }, // Umred (~60 km away)
+      { latitude: 21.05, longitude: 78.95 }, // Katol (~60 km away)
+      { latitude: 21.5, longitude: 78.8 }, // Saoner (~40 km away)
     ];
+
     const thresholdDistance = 10; // 5km range
 
     getUserLocation()
@@ -96,7 +109,7 @@ const ServiceAvailability = () => {
                 <p className="text-sm text-gray-600">
                   Your Location:{" "}
                   <span className="font-medium text-gray-800">
-                    {userLocation.latitude}, {userLocation.longitude}
+                    {userLocation.city}
                   </span>
                 </p>
               ) : (
