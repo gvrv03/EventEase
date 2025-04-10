@@ -28,7 +28,6 @@ const OurEvents = () => {
       setLoading(false);
     }
   };
-  console.log(events);
 
   useEffect(() => {
     getEvents();

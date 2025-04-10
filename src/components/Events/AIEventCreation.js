@@ -19,7 +19,6 @@ const AIEventCreation = () => {
       });
 
       const data = await res.json();
-      console.log(data);
     } catch (error) {
       console.error("Error:", error);
     }

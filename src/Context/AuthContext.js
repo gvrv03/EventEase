@@ -48,7 +48,6 @@ export const AuthProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      console.log(error);
       return setUser({
         isLogin: false,
         userData: null,
