@@ -12,7 +12,7 @@ const HomePage = () => {
   return (
     <div className="flex pb-20 flex-col gap-5">
       <Banner />
-      <ServiceAvailability/>
+      {/* <ServiceAvailability/> */}
       <Landing />
       <Features />
       <OurEvents />

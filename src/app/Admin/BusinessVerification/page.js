@@ -1,6 +1,9 @@
 import AllBusinessDetails from "@/components/Admin/BusinessVerification/AllBusinessDetails";
 import React from "react";
 
+
+
+
 const BusinessVerification = () => {
   return (
     <div>
@@ -8,6 +11,9 @@ const BusinessVerification = () => {
     </div>
   );
 };
+
+
+
 
 export default BusinessVerification;
 export const dynamic = "force-dynamic";
